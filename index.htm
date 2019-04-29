@@ -11,7 +11,7 @@
 
 
 <body>            
-    <nav>
+    <nav align="center">
         <a href="#" class="welcome" onclick="display_welcome()">Welcome</a>
         <a href="#" class="login_menu" onclick="display_login_page()">Login</a>
         <a href="#" class="register_menu" onclick="display_register_page()" >Register</a>
@@ -20,12 +20,12 @@
 <!--welcome page-->
 <div id = "welcome">
     <div id = "welcome_title">
-        <H1>Welcome to our PACMAN game!!</H1>
+        <H1 align="center">Welcome to our PACMAN game!!</H1>
         <br>
-        please register and login to start!
-
-        <button id="register" class="form_button" type="button" onclick="display_register_page()">Register</button>
-        <button id="login" class="form_button" type="button" onclick="display_login_page()">Login</button>
+        <h3 align="center"> please register and login to start!</h3>
+		<br>
+        <button class="menu-button" id="register_btn" type="button" onclick="display_register_page()">Register</button>
+        <button class="menu-button" id="login_btn" type="button" onclick="display_login_page()">Login</button>
     </div>   
 </div>
 
@@ -44,7 +44,8 @@
 
 <!--register page-->
 <div id = "register_page" class="form_reg" style="display : none">
-    <form class="register_form">
+    <h1 align="center">Register</h1>
+	<form class="register_form">
         <label for="user_name">User Name: </label>
         <input id="user_name" class="form_in" required maxlength="30">
         <br>
@@ -63,13 +64,7 @@
         <label for="birth_date">Birthday:  </label>
         <input id="birth_date" class="form_in" type="date" min="1900-1-1" max="2019-2-5">
         <br>
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
+        <br>       
         <br>
         <br>
         <br>
@@ -83,14 +78,13 @@
 
 <!--login page-->
 <div id = "login_page" class="form_log" style="display : none">
-    <form>
+    <h1 align="center">Log in</h1>
+	<form>
         <label for="user_name_login">User Name:</label>
         <input id="user_name_login" class="form_in" type="text" required maxlength="30">
         <br>
         <label for="user_password_login">Password:</label>
         <input id="user_password_login" class="form_in" type="password" required maxlength="30">
-        <br>
-        <br>
         <br>
         <br>
         <br>
@@ -102,33 +96,29 @@
 
 <!--settings page-->
 
-<div id="setting_page" class="form_con" style="display : none">
+<div id="setting_page" class="form_set" style="display : none">
     <h2><u>Choose your settings:</u></h2>
     <br>
 
     <!--TODO get arrors from user.-->
-    <strong>Choose number of balls (between 50-90) for the game:</strong>
-        <br>
-    <INPUT id = "number_of_balls" TYPE = "text" SIZE = "10"></P>
-        <br>
+    <strong>Choose number of balls (between 50-90) for the game:</strong><br><br>
+    <INPUT id = "number_of_balls" TYPE = "number"  min="50" max="90" value="50">
+        <br><br>
 
     <!--TODO determain balls colors.-->
     
-        <STRONG>Choose number of minutes:</STRONG> 
-        <br>
+        <STRONG>Choose number of minutes:</STRONG>
         <SELECT NAME = "number_of_minutes">
-            <OPTION>5
-            <OPTION>4
-            <OPTION>3
-            <OPTION>2
             <OPTION>1
+            <OPTION>2
+            <OPTION>3
+            <OPTION>4
+            <OPTION>5
         </SELECT>
     
     <br><br>
     
-        <STRONG>How many monsters you want in the game?:</STRONG><BR>
-
-        
+        <STRONG>How many monsters you want in the game?:</STRONG>  <br>     
         1<input type="radio" name="monsters" value="1" CHECKED><br>
         2<input type="radio" name="monsters" value="2"><br>
         3<input type="radio" name="monsters" value="3">
@@ -138,7 +128,7 @@
 
      <br><br>
      <button id= "random_game" class="form_button" type="button" onclick="getRandomSettings()"> Random settings </button>
-            
+     <button id= "play_game" class="form_button" type="button" onclick="checkSettings()"> Play! </button>       
 
 </div>
 
