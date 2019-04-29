@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script type="text/javascript" src="game.js"></script>
+    <script type="text/javascript" src="contentControl.js"></script>
+    <script type="text/javascript" src="userAdministration.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="css.css">
+</head>
+
+<body>
+
+<div class="topnav">
+    <a href="#" class="welcome" onclick="display_welcome()">Welcome</a>
+    <a href="#" class="login_menu" onclick="display_login_page()">Login</a>
+    <a href="#" class="register_menu" onclick="display_register_page()" >Register</a>
+</div>
+             
+
+<!--welcome page-->
+<div id = "welcome">
+    <div id = "welcome_title">
+        <H1>Welcome to our PACMAN game!!</H1>
+        <br>
+        <br>
+        <br>
+        <br>
+        please register and login to start!
+
+        <button id="register" class="form_button" type="button" onclick="display_register_page()">Register</button>
+        <button id="login" class="form_button" type="button" onclick="display_login_page()">Login</button>
+    </div>   
+</div>
+
+<!--register page-->
+<div id = "register_page" class="form_con" style="display : none">
+    <form>
+        <label for="user_name">User Name:</label>
+        <input id="user_name" class="form_in" required maxlength="30">
+
+        <label for="user_password">Password:</label>
+        <input id="user_password" class="form_in" type="password" required maxlength="30">
+
+        <label for="user_first_name">First Name:</label>
+        <input id="user_first_name" class="form_in"required maxlength="30">
+
+        <label for="user_last_name">Last Name:</label>
+        <input id="user_last_name" class="form_in"required maxlength="30">
+
+        <label for="user_email">Email:</label>
+        <input id="user_email" class="form_in" required maxlength="30">
+
+        <label for="birth_date">Birthday:</label>
+        <input id="birth_date" class="form_in" type="date" min="1900-1-1" max="2019-2-5">
+
+        <button id= "register_user" class="form_button" type="button" value="button"> Register </button>
+        <button id= "cancel_button" class="form_button" type="button" onclick="display_welcome()"> Cancel </button>
+    </form>
+</div>
+
+<!--login page-->
+<div id = "login_page" class="form_con" style="display : none">
+    <form>
+        <label for="user_name">UserName:</label>
+        <input id="user_name" class="form_in" required maxlength="30">
+
+        <label for="user_password">Password:</label>
+        <input id="user_password" class="form_in" type="password" required maxlength="30">
+
+        <button id= "login_button" class="form_button" type="button" onclick="tryLonin()"> Login </button>
+        <button id= "cancel_button" class="form_button" type="button" onclick="display_welcome()"> Cancel </button>
+    </form>
+</div>
+
+<!--settings page-->
+
+<div id="setting_page" class="form_con" style="display : none">
+    <h2>choose your setting:</h2>
+    <br>
+
+    <!--TODO get arrors from user.-->
+    <p><strong>choose number of balls (between 50-90) for the game:</strong>
+    <INPUT id = "number_of_balls" TYPE = "text" SIZE = "10"></P>
+
+
+    <!--TODO determain balls colors.-->
+    <P>
+        <STRONG>Choose number of minutes:</STRONG> 
+        <SELECT NAME = "number_of_minutes">
+            <OPTION>5
+            <OPTION>4
+            <OPTION>3
+            <OPTION>2
+            <OPTION>1
+        </SELECT>
+    </P>
+
+    <P>
+        <STRONG>how many monsters you want in the game?:</STRONG><BR>
+
+        1
+        <INPUT NAME = "how many monsters you want in the game" TYPE = "radio"
+           VALUE = "1" CHECKED>
+        2
+        <INPUT NAME = "how many monsters you want in the game" TYPE = "radio" 
+           VALUE = "2">
+        3
+        <INPUT NAME = "how many monsters you want in the game" TYPE = "radio" 
+           VALUE = "3">
+     </P>
+
+     <!--TODO getRandomSettings in the game.js when can.-->
+
+
+     <button id= "random_game" class="form_button" type="button" onclick="getRandomSettings()"> Random settings </button>
+            
+
+</div>
+
+
+
+<div id="game" style="display : none;">
+    SCORE:
+    <input id="lblScore" type="text"/>
+    <br/>
+    TIME:
+    <input id="lblTime" type="text"/>
+    <br/>
+    <canvas id="canvas" height="600" width="600"></canvas>  
+</div>
+
+
+
+
+</body>
+
+</html>
