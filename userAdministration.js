@@ -43,13 +43,15 @@ $((function(event){
 }));
 
 function tryLonin(){
-    var userName = document.getElementsByTagName('user_name');
-    var password = document.getElementsByTagName('user_password');
+    var userName = document.getElementById("user_name_login").value;
+    var password = document.getElementById("user_password_login").value;
     var nameIndex = userNames.indexOf(userName);
     var passwordIndex = passwords.indexOf(password);
     if (nameIndex > -1 && passwordIndex > -1 && passwordIndex === nameIndex){
         alert("You are logged in!")
         display_settings_page();
+        document.getElementById("user_name_login").value = "";
+        document.getElementById("user_password_login").value = "";
     }
     else{
         alert("User name or password in correct, please try again");
