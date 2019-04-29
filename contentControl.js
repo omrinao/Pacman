@@ -10,6 +10,9 @@
 
         let Settings = document.getElementById("setting_page");
         Settings.style.display = "none";
+
+        let Play = document.getElementById("game");
+        Play.style.display = "none";
     }
 
     function display_welcome(){
@@ -73,5 +76,14 @@
         if (event.target == modal) {
             modal.style.display = "none";
         }
+        }
+    }
+
+    function display_game_page(){
+        var x = document.getElementById("game");
+        if (x.style.display === "none")
+        {
+            displayNone();
+            x.style.display = "block";
         }
     }

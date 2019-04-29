@@ -16,6 +16,7 @@
         <a href="#" class="login_menu" onclick="display_login_page()">Login</a>
         <a href="#" class="register_menu" onclick="display_register_page()" >Register</a>
         <a href="#" id="about_menu" class="about_menu" onclick="display_about_page()">About</a>
+        <a href="#" id="play_menu" class="play_menu" onclick="display_game_page()">Play - for test</a>
     </nav>
 <!--welcome page-->
 <div id = "welcome">
@@ -128,17 +129,16 @@
 
      <br><br>
      <button id= "random_game" class="form_button" type="button" onclick="getRandomSettings()"> Random settings </button>
-     <button id= "play_game" class="form_button" type="button" onclick="checkSettings()"> Play! </button>       
+     <button id= "play_game" class="form_button" type="button" onclick="display_game_page()"> Play! </button>       
 
 </div>
 
 
 
-<div id="game" style="display : none;">
-    SCORE:
+<div id="game" class="game" style="display : none;">
+    <label>SCORE:</label>
     <input id="lblScore" type="text"/>
-    <br/>
-    TIME:
+    <label>TIME:</label>
     <input id="lblTime" type="text"/>
     <br/>
     <canvas id="canvas" height="600" width="600"></canvas>  
