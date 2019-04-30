@@ -110,13 +110,22 @@ nav {
   margin-left: 20%;
 }
 
-label {
+.reglabel {
   width:35%;
   clear:left;
   text-align:right;
   padding-right:10px;
   vertical-align: middle;
   margin-top: 2%;
+}
+
+.gameLabel{
+  text-align: left;
+  margin-right: 1%;
+}
+
+.gameInput{
+  margin-right: 5%;
 }
 
 input, label {
@@ -163,6 +172,10 @@ input, label {
 
 .game{
   position: relative;
-	left: 50%; 
-	margin-left: -100px;
+	left: 25%; 
+	/*margin-left: -25%;*/
+}
+
+footer{
+  position: fixed;
 }

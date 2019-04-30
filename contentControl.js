@@ -15,17 +15,31 @@
         Play.style.display = "none";
     }
 
+    function cleanInputs(){
+        document.getElementById("user_name").value = "";
+        document.getElementById("user_password").value = "";
+        document.getElementById("user_first_name").value = "";
+        document.getElementById("user_last_name").value = "";
+        document.getElementById("user_email").value = "";
+        document.getElementById("birth_date").value = "";
+        document.getElementById("user_name_login").value = "";
+        document.getElementById("user_password_login").value = "";
+    }
+
     function display_welcome(){
         var x = document.getElementById("welcome");
+        cleanInputs();
         if (x.style.display === "none")
         {
             displayNone();
             x.style.display = "block";
         }
     }
+    
 
     function display_register_page(){
         var x = document.getElementById("register_page");
+        cleanInputs();
         if (x.style.display === "none")
         {
             displayNone();
@@ -35,6 +49,7 @@
 
     function display_login_page(){
         var x = document.getElementById("login_page");
+        cleanInputs();
         if (x.style.display === "none")
         {
             displayNone();
@@ -44,6 +59,7 @@
 
     function display_settings_page(){
         var x = document.getElementById("setting_page");
+        cleanInputs();
         if (x.style.display === "none")
         {
             displayNone();
