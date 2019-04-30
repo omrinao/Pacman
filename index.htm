@@ -2,95 +2,78 @@
 <html>
 
 <head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script type="text/javascript" src="game.js"></script>
     <script type="text/javascript" src="contentControl.js"></script>
     <script type="text/javascript" src="userAdministration.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
-
     <link rel="stylesheet" type="text/css" href="css.css">
 </head>
 
+<body>
 
-<body>            
-    <nav align="center">
-        <a href="#" class="welcome" onclick="display_welcome()">Welcome</a>
-        <a href="#" class="login_menu" onclick="display_login_page()">Login</a>
-        <a href="#" class="register_menu" onclick="display_register_page()" >Register</a>
-        <a href="#" id="about_menu" class="about_menu" onclick="display_about_page()">About</a>
-        <a href="#" id="play_menu" class="play_menu" onclick="display_game_page()">Play - for test</a>
-    </nav>
+<div class="topnav">
+    <a href="#" class="welcome" onclick="display_welcome()">Welcome</a>
+    <a href="#" class="login_menu" onclick="display_login_page()">Login</a>
+    <a href="#" class="register_menu" onclick="display_register_page()" >Register</a>
+</div>
+             
+
 <!--welcome page-->
 <div id = "welcome">
     <div id = "welcome_title">
-        <H1 align="center">Welcome to our PACMAN game!!</H1>
+        <H1>Welcome to our PACMAN game!!</H1>
         <br>
-        <h3 align="center"> please register and login to start!</h3>
-		<br>
-        <button class="menu-button" id="register_btn" type="button" onclick="display_register_page()">Register</button>
-        <button class="menu-button" id="login_btn" type="button" onclick="display_login_page()">Login</button>
+        <br>
+        <br>
+        <br>
+        please register and login to start!
+
+        <button id="register" class="form_button" type="button" onclick="display_register_page()">Register</button>
+        <button id="login" class="form_button" type="button" onclick="display_login_page()">Login</button>
     </div>   
 </div>
 
-<!--about page-->
-
-<!-- The Modal -->
-<div id="myModal" class="modal">
-
-  <!-- Modal content -->
-  <div class="modal-content">
-    <span class="close">&times;</span>
-    <p>Some text in the Modal..</p>
-  </div>
-
-</div>
-
 <!--register page-->
-<div id = "register_page" class="form_reg" style="display : none">
-    <h1 align="center">Register</h1>
-	<form class="register_form">
-        <label class="reglabel" for="user_name">User Name: </label>
-        <input id="user_name" class="form_in" required maxlength="30">
-        <br>
-        <label class="reglabel" for="user_password">Password:  </label>
-        <input id="user_password" class="form_in" type="password" required maxlength="30">
-        <br>
-        <label class="reglabel" for="user_first_name">First Name:</label>
-        <input id="user_first_name" class="form_in"required maxlength="30">
-        <br>
-        <label class="reglabel" for="user_last_name">Last Name: </label>
-        <input id="user_last_name" class="form_in"required maxlength="30">
-        <br>
-        <label class="reglabel" for="user_email">Email:     </label>
-        <input id="user_email" class="form_in" required maxlength="30">
-        <br>
-        <label class="reglabel" for="birth_date">Birthday:  </label>
-        <input id="birth_date" class="form_in" type="date" min="1900-1-1" max="2019-2-5">
-        <br>
-        <br>       
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
-        <button id= "register_user" class="form_button" type="button" value="button"> Register </button>
+<div id = "register_page" class="form_con" style="display : none">
+    <form id="register_form">
+        <label for="user_name">User Name:</label>
+        <span class="error_form" id="user_name_error"></span>
+        <input id="user_name" placeholder="User Name" class="form_in" required maxlength="30">
+
+        <label for="user_password">Password:</label>
+        <span class="error_form" id="user_password_error"></span>
+        <input id="user_password" placeholder="Password" class="form_in" type="password" maxlength="30" minlength="8" required>
+
+        <label for="user_first_name">First Name:</label>
+        <span class="error_form" id="first_name_error"></span>
+        <input id="user_first_name" placeholder="First name" class="form_in" maxlength="30" required>
+
+        <label for="user_last_name">Last Name:</label>
+        <span class="error_form" id="last_name_error"></span>
+        <input id="user_last_name" placeholder="Last name" class="form_in" maxlength="30" required>
+
+        <label for="user_email">Email:</label>
+        <span class="error_form" id="email_error"></span>
+        <input id="user_email" placeholder="Email" class="form_in" maxlength="30" required>
+
+        <label for="birth_date">Birth day:</label>
+        <span class="error_form" id="BD_error"></span>
+        <input id="birth_date" class="form_in" type="date">
+
+        <button id= "register_user" class="form_button" type="button" value="register"> Register </button>
         <button id= "cancel_button" class="form_button" type="button" onclick="display_welcome()"> Cancel </button>
     </form>
 </div>
 
 <!--login page-->
-<div id = "login_page" class="form_log" style="display : none">
-    <h1 align="center">Log in</h1>
-	<form>
-        <label class="reglabel" for="user_name_login">User Name:</label>
-        <input id="user_name_login" class="form_in" type="text" required maxlength="30">
-        <br>
-        <label class="reglabel" for="user_password_login">Password:</label>
+<div id = "login_page" class="form_con" style="display : none">
+    <form>
+        <label for="user_name_login">UserName:</label>
+        <input id="user_name_login" class="form_in" required maxlength="30">
+
+        <label for="user_password_login">Password:</label>
         <input id="user_password_login" class="form_in" type="password" required maxlength="30">
-        <br>
-        <br>
-        <br>
-        <br>
+
         <button id= "login_button" class="form_button" type="button" onclick="tryLonin()"> Login </button>
         <button id= "cancel_button" class="form_button" type="button" onclick="display_welcome()"> Cancel </button>
     </form>
@@ -98,61 +81,64 @@
 
 <!--settings page-->
 
-<div id="setting_page" class="form_set" style="display : none">
-    <h2><u>Choose your settings:</u></h2>
+<div id="setting_page" class="form_con" style="display : none">
+    <h2>choose your setting:</h2>
     <br>
 
     <!--TODO get arrors from user.-->
-    <strong class="reglabel">Choose number of balls (between 50-90) for the game:</strong><br><br>
-    <INPUT id = "number_of_balls" TYPE = "number"  min="50" max="90" value="50">
-        <br><br>
+    <p><strong>choose number of balls (between 50-90) for the game:</strong>
+    <INPUT id = "number_of_balls" TYPE = "text" SIZE = "10"></P>
+
 
     <!--TODO determain balls colors.-->
-    
-        <STRONG class="reglabel">Choose number of minutes:</STRONG>
+    <P>
+        <STRONG>Choose number of minutes:</STRONG> 
         <SELECT NAME = "number_of_minutes">
-            <OPTION>1
-            <OPTION>2
-            <OPTION>3
-            <OPTION>4
             <OPTION>5
+            <OPTION>4
+            <OPTION>3
+            <OPTION>2
+            <OPTION>1
         </SELECT>
-    
-    <br><br>
-    
-        <STRONG class="reglabel">How many monsters you want in the game?:</STRONG>  <br>     
-        1<input type="radio" name="monsters" value="1" CHECKED><br>
-        2<input type="radio" name="monsters" value="2"><br>
-        3<input type="radio" name="monsters" value="3">
-     
+    </P>
+
+    <P>
+        <STRONG>how many monsters you want in the game?:</STRONG><BR>
+
+        1
+        <INPUT NAME = "how many monsters you want in the game" TYPE = "radio"
+           VALUE = "1" CHECKED>
+        2
+        <INPUT NAME = "how many monsters you want in the game" TYPE = "radio" 
+           VALUE = "2">
+        3
+        <INPUT NAME = "how many monsters you want in the game" TYPE = "radio" 
+           VALUE = "3">
+    </P>
 
      <!--TODO getRandomSettings in the game.js when can.-->
 
-     <br><br>
+
      <button id= "random_game" class="form_button" type="button" onclick="getRandomSettings()"> Random settings </button>
-     <button id= "play_game" class="form_button" type="button" onclick="display_game_page()"> Play! </button>       
+    
 
 </div>
 
 
 
-<div id="game" class="game" style="display : none;">
-    <label class="gameLabel">SCORE:</label>
-    <input class="gameInput" id="lblScore" type="text"/>
-    <label class="gameLabel">TIME:</label>
-    <input class="gameInput" id="lblTime" type="text"/>
-    <br/><br/>
-    <canvas id="canvas" width="700" height="480" style="border:1px solid #000000;"></canvas> 
-    <script>Draw();</script>
+<div id="game" style="display : none;">
+    SCORE:
+    <input id="lblScore" type="text"/>
+    <br/>
+    TIME:
+    <input id="lblTime" type="text"/>
+    <br/>
+    <canvas id="canvas" height="600" width="600"></canvas>  
 </div>
 
 
 
 
 </body>
-<footer>
-    <hr style="color:black; size: 12px"></hr>
-    <h1 style="color: red; margin-left: 40%;">This  is  the  footer</h1>
-</footer> 
 
 </html>
