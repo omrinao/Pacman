@@ -2,11 +2,10 @@
 <html>
 
 <head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
     <script type="text/javascript" src="game.js"></script>
     <script type="text/javascript" src="contentControl.js"></script>
     <script type="text/javascript" src="userAdministration.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
-
     <link rel="stylesheet" type="text/css" href="css.css">
 </head>
 
@@ -49,21 +48,27 @@
     <h1 align="center">Register</h1>
 	<form class="register_form">
         <label class="reglabel" for="user_name">User Name: </label>
+        <span class="error_form" id="user_name_error"></span>
         <input id="user_name" class="form_in" required maxlength="30">
         <br>
         <label class="reglabel" for="user_password">Password:  </label>
+        <span class="error_form" id="user_password_error"></span>
         <input id="user_password" class="form_in" type="password" required maxlength="30">
         <br>
         <label class="reglabel" for="user_first_name">First Name:</label>
+        <span class="error_form" id="first_name_error"></span>
         <input id="user_first_name" class="form_in"required maxlength="30">
         <br>
         <label class="reglabel" for="user_last_name">Last Name: </label>
+        <span class="error_form" id="last_name_error"></span>
         <input id="user_last_name" class="form_in"required maxlength="30">
         <br>
         <label class="reglabel" for="user_email">Email:     </label>
+        <span class="error_form" id="email_error"></span>
         <input id="user_email" class="form_in" required maxlength="30">
         <br>
         <label class="reglabel" for="birth_date">Birthday:  </label>
+        <span class="error_form" id="BD_error"></span>
         <input id="birth_date" class="form_in" type="date" min="1900-1-1" max="2019-2-5">
         <br>
         <br>       
@@ -78,6 +83,7 @@
     </form>
 </div>
 
+
 <!--login page-->
 <div id = "login_page" class="form_log" style="display : none">
     <h1 align="center">Log in</h1>
@@ -91,7 +97,7 @@
         <br>
         <br>
         <br>
-        <button id= "login_button" class="form_button" type="button" onclick="tryLonin()"> Login </button>
+        <button id= "login_button" class="form_button" type="button" onclick="tryLogin()"> Login </button>
         <button id= "cancel_button" class="form_button" type="button" onclick="display_welcome()"> Cancel </button>
     </form>
 </div>
@@ -139,11 +145,24 @@
 <div id="game" class="game" style="display : none;">
     <label class="gameLabel">SCORE:</label>
     <input class="gameInput" id="lblScore" type="text"/>
-    <label class="gameLabel">TIME:</label>
+    <label class="gameLabel">TIME LEFT:</label>
     <input class="gameInput" id="lblTime" type="text"/>
+    <label class="gameLabel">LIVES:</label>
+    <input class="gameInput" id="lblLives" type="text"/>
     <br/><br/>
-    <canvas id="canvas" width="700" height="480" style="border:1px solid #000000;"></canvas> 
-    <script>Draw();</script>
+    <canvas id="canvas" width="700" height="480" style="border:1px solid #000000;"></canvas>
+    <script>
+    var context = canvas.getContext("2d");
+    var shape = new Object();
+    var board;
+    var score;
+    var pac_color;
+    var start_time;
+    var time_elapsed;
+    var interval;
+
+    Start();
+        </script>
 </div>
 
 

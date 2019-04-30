@@ -1,4 +1,4 @@
-    var context = canvas.getContext("2d");
+    /*var context = canvas.getContext("2d");
     var shape = new Object();
     var board;
     var score;
@@ -7,7 +7,7 @@
     var time_elapsed;
     var interval;
 
-    Start();
+    Start();*/
 
     function Start() {
         board = new Array();

@@ -1,48 +1,160 @@
 var userNames = ["a"];
 var passwords = ["a"];
+var emails = [];
 
+$(function (e) {
+    $("#register_user").click(function(){
 
-$((function(event){
-    $('#register_user').click(function(){
-        var userName = $('user_name').val();
-        var password = $('user_password').val();
-        var firstName = $('user_first_name').val();
-        var lastName = $('user_last_name').val();
-        var email = $('user_email').val();
+        
+        $("#user_name_error").hide();
+        $("#user_password_error").hide();
+        $("#first_name_error").hide();
+        $("#last_name_error").hide();
+        $("#email_error").hide();
+        $("#BD_error").hide();
 
-        allValid = false;
-        if (!checkForEmptyFields(userName,password,firstName,lastName,email))
-            alert('You have to fill all the fields please');
-        else
-            if (isUserNameExists(userName))
-                alert('User name is already exists, choose another one');
-            else
-                if (!isPasswordValid(password))
-                    alert('Password is not valid, password need to be at least 8 character with one letter and one digit.')
-                else
-                    if (!isNameValid(firstName) || !isNameValid(lastName)){
-                        if (!isNameValid(firstName))
-                            alert('first name is not valid, please enter only letter')
-                        else
-                            alert('Last name is not valid, please enter only letter')
-                    }
-                    else
-                        if (!isEmailValid(email))
-                            alert('email is not valid')
-                        else
-                            allValid = true;
-        if (!allValid){
-            event.preventDefalut();
-        }
-        else{
-            addUser(userName,password);
-            alert('Account created! \nLogin to start a game!');
+        var userNameValid = isUserNameValid();
+        var userPasswordValid = isPasswordValid();
+        var fNameValid = isFNameValid();
+        var lNameValid = isLNameValid();
+        var emailValid = isEmailValid();
+        var birthDayValid = isBDValid();
+        
+        if (userNameValid && userPasswordValid && fNameValid && lNameValid && emailValid && birthDayValid){
+            alert("registration successful! please login to start a game!");
+            addUser();
             display_login_page();
+            document.getElementById("register_form").reset();
         }
     });
-}));
+});
 
-function tryLonin(){
+    function isUserNameValid(){
+
+        var userName = $("#user_name").val();
+        if (userName === ''){
+            $("#user_name_error").html("User name must be filled.")
+                $("#user_name_error").show();
+                return false;
+        }
+        for(let i = 0; i < userNames.length; i++)
+        {
+            if (userNames[i].localeCompare(userName) === 0){
+                $("#user_name_error").html("User name is already taken, please choose another one.")
+                $("#user_name_error").show();
+                return false;
+            }
+        }
+        $("#user_name_error").hide();
+        return true;
+    }
+
+
+    function isPasswordValid(){
+        var password = $("#user_password").val();
+        if (password.length < 8){
+            $("#user_password_error").html("At least 8 characters.")
+            $("#user_password_error").show();
+            return false;
+        } else {
+            if (!(/\d+/.test(password) && (/[a-zA-Z]/.test(password)))){
+                $("#user_password_error").html("At least 1 letter and 1 digit.")
+                $("#user_password_error").show();
+                return false;
+            }
+            else {
+                $("#user_password_error").hide();
+                return true;
+            }
+        }   
+    }
+
+
+
+
+    function isFNameValid(){
+        var pattern = /^[A-Za-z]+$/;
+        var fName = $("#user_first_name").val();
+        if (pattern.test(fName) && fName !== ''){
+            $("#first_name_error").hide();
+            return true;
+        } else {
+            $("#first_name_error").html("Should contain only characters.");
+            $("#first_name_error").show();
+            return false;
+        }
+
+    }
+
+    function isLNameValid(){
+        var pattern = /^[A-Za-z]+$/;
+        var fName = $("#user_last_name").val();
+        if (pattern.test(fName) && fName !== ''){
+            $("#last_name_error").hide();
+            return true;
+        } else {
+            $("#last_name_error").html("Should contain only characters.");
+            $("#last_name_error").show();
+            return false;
+        }
+
+    }
+
+    function isEmailValid(){
+        var pattern = /^[\w-.+]+@[a-zA-Z0-9.-]+.[a-zA-z0-9]{2,4}$/;
+        var email = $("#user_email").val();
+        if (isEmailExists(email)){
+            $("#email_error").html("email already exists.");
+            $("#email_error").show();
+            return false;
+        } else {
+            if (pattern.test(email) && email !== ''){
+                $("#email_error").hide();
+                return true;
+                
+            }else{
+                $("#email_error").html("Invalid email.");
+                $("#email_error").show();
+                return false;
+            }
+        }
+    }
+
+    function isEmailExists(email){
+        for(let i = 0; i < emails.length; i++)
+        {
+            if (emails[i].localeCompare(email) === 0)
+                return true;
+        }
+        return false;
+    }
+
+function isBDValid(){
+    var date = new Date();
+    var BD = $("#birth_date").val();
+    var BD = new Date(BD);
+    if (date < BD){
+        $("#BD_error").html("Invalid date.");
+        $("#BD_error").show();
+        return false;
+    }
+    else{
+        $("#BD_error").hide();
+        return true;
+    }
+}
+    
+function addUser(){
+    var userName = document.getElementById("user_name").value;
+    var password = document.getElementById("user_password").value;
+    var email = document.getElementById("user_email").value;
+    userNames.push(userName);
+    passwords.push(password);
+    emails.push(email);
+}
+
+
+function tryLogin(){
     var userName = document.getElementById("user_name_login").value;
     var password = document.getElementById("user_password_login").value;
     var nameIndex = userNames.indexOf(userName);
@@ -58,52 +170,4 @@ function tryLonin(){
         event.preventDefault();
     }
 
-}
-function isPasswordValid(password){
-    if (/\d+/.test(password) && (/[a-zA-Z]/.test(password)) && password.length > 7)
-        return true;
-    else
-        return false;
-}
-
-function checkForEmptyFields(userName,password,firstName,lastName,email){
-    if (trim(userName).lenth === 0 ||
-        trim(password).lenth === 0 ||
-        trim(firstName).lenth === 0 ||
-        trim(lastName).lenth === 0 ||
-        trim(email).lenth === 0)
-
-        return false;
-    else
-        return true;
-}
-
-function isUserNameExists(userName){
-    for(let i = 0; i < userNames.length; i++)
-    {
-        if (userNames[i].localeCompare(userName))
-            return true;
-    }
-    return false;
-}
-
-function isNameValid(name){
-    var validNameInput = /^[A-Za-z]+$/;
-    if (validNameInput.test(name))
-        return true;
-    else
-        return false;
-}
-
-function isEmailValid(email){
-    var validEmail = /\S+@\S+\.\S+/;
-    if (validEmail.test(email))
-        return true;
-    else
-        return false;
-}
-
-function addUser(userNmae, password){
-    userNames.push(userNmae);
-    passwords.push(password);
 }
