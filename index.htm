@@ -13,17 +13,19 @@
 <body>            
     <nav align="center">
         <a href="#" class="welcome" onclick="display_welcome()">Welcome</a>
-        <a href="#" class="login_menu" onclick="display_login_page()">Login</a>
-        <a href="#" class="register_menu" onclick="display_register_page()" >Register</a>
+        <a href="#" id="login_menu" class="login_menu" onclick="display_login_page()">Login</a>
+        <a href="#" id="register_menu" class="register_menu" onclick="display_register_page()" >Register</a>
         <a href="#" id="about_menu" class="about_menu" onclick="display_about_page()">About</a>
-        <a href="#" id="play_menu" class="play_menu" onclick="display_game_page()">Play - for test</a>
+        <a href="#" id="play_menu" class="play_menu" onclick="Start(); display_game_page();">Play - for test</a>
+        <a href="#" id="logOut" style="display: none;float:right" onclick="tryLogout()"></a>
+        <a id="userNameConnectedLabel" style="display: none; float:right; color: green;"></a>
     </nav>
 <!--welcome page-->
 <div id = "welcome">
     <div id = "welcome_title">
         <H1 align="center">Welcome to our PACMAN game!!</H1>
         <br>
-        <h3 align="center"> please register and login to start!</h3>
+        <h3 id="pleasreglog" align="center"> please register and login to start!</h3>
 		<br>
         <button class="menu-button" id="register_btn" type="button" onclick="display_register_page()">Register</button>
         <button class="menu-button" id="login_btn" type="button" onclick="display_login_page()">Login</button>
@@ -48,34 +50,36 @@
     <h1 align="center">Register</h1>
 	<form class="register_form">
         <label class="reglabel" for="user_name">User Name: </label>
-        <span class="error_form" id="user_name_error"></span>
         <input id="user_name" class="form_in" required maxlength="30">
         <br>
+        <span class="error_form" id="user_name_error"></span>
+        <br>
         <label class="reglabel" for="user_password">Password:  </label>
-        <span class="error_form" id="user_password_error"></span>
         <input id="user_password" class="form_in" type="password" required maxlength="30">
         <br>
+        <span class="error_form" id="user_password_error"></span>
+        <br>
         <label class="reglabel" for="user_first_name">First Name:</label>
-        <span class="error_form" id="first_name_error"></span>
         <input id="user_first_name" class="form_in"required maxlength="30">
+        <br><br>
+        <span class="error_form" id="first_name_error"></span>
         <br>
         <label class="reglabel" for="user_last_name">Last Name: </label>
-        <span class="error_form" id="last_name_error"></span>
         <input id="user_last_name" class="form_in"required maxlength="30">
         <br>
+        <span class="error_form" id="last_name_error"></span>
+        <br>
         <label class="reglabel" for="user_email">Email:     </label>
-        <span class="error_form" id="email_error"></span>
         <input id="user_email" class="form_in" required maxlength="30">
+        <br><br>
+        <span class="error_form" id="email_error"></span>
         <br>
         <label class="reglabel" for="birth_date">Birthday:  </label>
+        <input id="birth_date" class="form_in" type="date" min="1900-1-1" max="2019-2-5" value="2014-12-29">
+        <br>
         <span class="error_form" id="BD_error"></span>
-        <input id="birth_date" class="form_in" type="date" min="1900-1-1" max="2019-2-5">
         <br>
         <br>       
-        <br>
-        <br>
-        <br>
-        <br>
         <br>
         <br>
         <button id= "register_user" class="form_button" type="button" value="button"> Register </button>
@@ -108,35 +112,58 @@
     <h2><u>Choose your settings:</u></h2>
     <br>
 
-    <!--TODO get arrors from user.-->
+    <!--TODO get arrows from user.-->
+    <STRONG class="setlabel">Choose the 4 keys to move the pacman up down etc:</STRONG>
+    <br><br>
+    <label class="setlabel" for="user_arrow">Up key: </label>
+    <button id="upArrow" class="form_button" value="button" type="button" onkeydown="getKey('up',event)"> Up Arrow </button><br><br>
+
+    <label class="setlabel" for="user_arrow">Down key: </label>
+    <button id="downArrow" class="form_button" value="button" type="button" onkeydown="getKey('down',event)"> Down Arrow </button><br><br>
+
+    <label class="setlabel" for="user_arrow">Left key: </label>
+    <button id="leftArrow" class="form_button" value="button" type="button" onkeydown="getKey('left',event)"> Left Arrow </button><br><br>
+
+    <label class="setlabel" for="user_arrow">Right key: </label>
+    <button id="rightArrow" class="form_button" value="button" type="button" onkeydown="getKey('right',event)"> Right Arrow </button><br><br>
+
     <strong class="reglabel">Choose number of balls (between 50-90) for the game:</strong><br><br>
     <INPUT id = "number_of_balls" TYPE = "number"  min="50" max="90" value="50">
         <br><br>
 
     <!--TODO determain balls colors.-->
+    <STRONG class="setlabel">Choose colors to 3 kinds of balls:</STRONG><br><br>
+
+    <label class="setlabel" for="user_arrow">5 points color:</label>
+    <input id="5pColor" type="color" name="favcolor" value="#ff0000"><br><br>
+
+    <label class="setlabel" for="user_arrow">10 points color:</label>
+    <input id="10pColor" type="color" name="favcolor" value="#0000ff"><br><br>
+
+    <label class="setlabel" for="user_arrow">25 points color:</label>
+    <input id="25pColor" type="color" name="favcolor" value="#00ff40"><br><br>
+
     
-        <STRONG class="reglabel">Choose number of minutes:</STRONG>
-        <SELECT NAME = "number_of_minutes">
-            <OPTION>1
-            <OPTION>2
-            <OPTION>3
-            <OPTION>4
-            <OPTION>5
+        <STRONG class="setlabel">Choose number of minutes:</STRONG>
+        <SELECT id= "number_of_minutes">
+            <OPTION value="1">1
+            <OPTION value="2">2
+            <OPTION value="3">3
+            <OPTION value="4">4
+            <OPTION value="5">5
         </SELECT>
     
     <br><br>
     
-        <STRONG class="reglabel">How many monsters you want in the game?:</STRONG>  <br>     
+        <STRONG class="setlabel">How many monsters you want in the game?:</STRONG>  <br>     
         1<input type="radio" name="monsters" value="1" CHECKED><br>
         2<input type="radio" name="monsters" value="2"><br>
         3<input type="radio" name="monsters" value="3">
      
-
-     <!--TODO getRandomSettings in the game.js when can.-->
-
      <br><br>
+     
      <button id= "random_game" class="form_button" type="button" onclick="getRandomSettings()"> Random settings </button>
-     <button id= "play_game" class="form_button" type="button" onclick="display_game_page()"> Play! </button>       
+     <button id= "play_game" class="form_button" type="button" onclick="display_game_page(); Start();"> Play! </button>       
 
 </div>
 
@@ -150,7 +177,7 @@
     <label class="gameLabel">LIVES:</label>
     <input class="gameInput" id="lblLives" type="text"/>
     <br/><br/>
-    <canvas id="canvas" width="700" height="480" style="border:1px solid #000000;"></canvas>
+    <canvas id="canvas" width="600" height="480" style="border:2px solid #000000;"></canvas>
     <script>
     var context = canvas.getContext("2d");
     var shape = new Object();
@@ -159,19 +186,15 @@
     var pac_color;
     var start_time;
     var time_elapsed;
+    var lives;
     var interval;
-
-    Start();
         </script>
 </div>
-
-
-
 
 </body>
 <footer>
     <hr style="color:black; size: 12px"></hr>
     <h1 style="color: red; margin-left: 40%;">This  is  the  footer</h1>
-</footer> 
+</footer>
 
 </html>

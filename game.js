@@ -8,8 +8,15 @@
     var interval;
 
     Start();*/
+    var direction;
 
     function Start() {
+        lblScore.value = 0;
+        lblTime.value = 0;
+        lblLives.value = 3;
+        time_elapsed = 0;
+        score = 0;
+        lives = 3;
         board = new Array();
         score = 0;
         pac_color = "yellow";
@@ -88,36 +95,69 @@
         context.clearRect(0, 0, canvas.width, canvas.height); //clean board
         lblScore.value = score;
         lblTime.value = time_elapsed;
+        lblLives.value = lives;
         for (var i = 0; i < 10; i++) {
             for (var j = 0; j < 10; j++) {
                 var center = new Object();
                 center.x = i * 60 + 30;
-                center.y = j * 60 + 30;
-                if (board[i][j] === 2) {
+                center.y = j * 46 + 30;
+                if (board[i][j] === 2 && direction === "right") {
                     context.beginPath();
-                    context.arc(center.x, center.y, 30, 0.15 * Math.PI, 1.85 * Math.PI); // half circle
+                    context.arc(center.x, center.y, 15, 0.1 * Math.PI, 1.85 * Math.PI); // half circle
                     context.lineTo(center.x, center.y);
                     context.fillStyle = pac_color; //color
                     context.fill();
                     context.beginPath();
-                    context.arc(center.x + 5, center.y - 15, 5, 0, 2 * Math.PI); // circle
+                    context.arc(center.x + 2, center.y - 9, 3, 0, 2 * Math.PI); // circle
                     context.fillStyle = "black"; //color
                     context.fill();
-                } else if (board[i][j] === 1) {
+                } 
+                else if (board[i][j] === 2 && direction === "left") {
                     context.beginPath();
-                    context.arc(center.x, center.y, 15, 0, 2 * Math.PI); // circle
+                    context.arc(center.x, center.y, 15, 1.15 * Math.PI, 0.9 * Math.PI); // half circle
+                    context.lineTo(center.x, center.y);
+                    context.fillStyle = pac_color; //color
+                    context.fill();
+                    context.beginPath();
+                    context.arc(center.x + 2, center.y - 9, 3, 0, 2 * Math.PI); // circle
+                    context.fillStyle = "black"; //color
+                    context.fill();
+                }
+                else if (board[i][j] === 2 && direction === "up") {
+                    context.beginPath();
+                    context.arc(center.x, center.y, 15, 1.60 * Math.PI, 1.35 * Math.PI); // half circle
+                    context.lineTo(center.x, center.y);
+                    context.fillStyle = pac_color; //color
+                    context.fill();
+                    context.beginPath();
+                    context.arc(center.x + 9, center.y - 2, 3, 0, 2 * Math.PI); // circle
+                    context.fillStyle = "black"; //color
+                    context.fill();
+                }
+                else if (board[i][j] === 2 && direction === "down") {
+                    context.beginPath();
+                    context.arc(center.x, center.y, 15, 0.60 * Math.PI, 0.35 * Math.PI); // half circle
+                    context.lineTo(center.x, center.y);
+                    context.fillStyle = pac_color; //color
+                    context.fill();
+                    context.beginPath();
+                    context.arc(center.x + 9, center.y - 2, 3, 0, 2 * Math.PI); // circle
+                    context.fillStyle = "black"; //color
+                    context.fill();
+                }
+                else if (board[i][j] === 1) {
+                    context.beginPath();
+                    context.arc(center.x, center.y, 13, 0, 2 * Math.PI); // circle
                     context.fillStyle = "black"; //color
                     context.fill();
                 } else if (board[i][j] === 4) {
                     context.beginPath();
-                    context.rect(center.x - 30, center.y - 30, 60, 60);
+                    context.rect(center.x - 30, center.y - 30, 50, 50);
                     context.fillStyle = "grey"; //color
                     context.fill();
                 }
             }
         }
-
-
     }
 
     function UpdatePosition() {
@@ -126,21 +166,25 @@
         if (x === 1) {
             if (shape.j > 0 && board[shape.i][shape.j - 1] !== 4) {
                 shape.j--;
+                direction = "up";
             }
         }
         if (x === 2) {
             if (shape.j < 9 && board[shape.i][shape.j + 1] !== 4) {
                 shape.j++;
+                direction = "down";
             }
         }
         if (x === 3) {
             if (shape.i > 0 && board[shape.i - 1][shape.j] !== 4) {
                 shape.i--;
+                direction = "left";
             }
         }
         if (x === 4) {
             if (shape.i < 9 && board[shape.i + 1][shape.j] !== 4) {
                 shape.i++;
+                direction = "right";
             }
         }
         if (board[shape.i][shape.j] === 1) {

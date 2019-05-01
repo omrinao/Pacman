@@ -24,6 +24,15 @@
         document.getElementById("birth_date").value = "";
         document.getElementById("user_name_login").value = "";
         document.getElementById("user_password_login").value = "";
+        document.getElementById("lblScore").value = "";
+        document.getElementById("lblTime").value = "";
+        document.getElementById("lblLives").value = "";
+        document.getElementById("user_name_error").style.display = "none";
+        document.getElementById("user_password_error").style.display = "none";
+        document.getElementById("first_name_error").style.display = "none";
+        document.getElementById("last_name_error").style.display = "none";
+        document.getElementById("email_error").style.display = "none";
+        document.getElementById("BD_error").style.display = "none";
     }
 
     function display_welcome(){
@@ -97,6 +106,7 @@
 
     function display_game_page(){
         var x = document.getElementById("game");
+        cleanInputs();
         if (x.style.display === "none")
         {
             displayNone();

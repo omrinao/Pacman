@@ -1,6 +1,7 @@
 var userNames = ["a"];
 var passwords = ["a"];
 var emails = [];
+var userNameConnected;
 
 $(function (e) {
     $("#register_user").click(function(){
@@ -164,10 +165,30 @@ function tryLogin(){
         display_settings_page();
         document.getElementById("user_name_login").value = "";
         document.getElementById("user_password_login").value = "";
+        userNameConnected = userName;
+        document.getElementById("userNameConnectedLabel").textContent = "Hello, " + userNameConnected;
+        document.getElementById("userNameConnectedLabel").style.display = "block";
+        document.getElementById("logOut").textContent = "Log Out";
+        document.getElementById("logOut").style.display = "block";
+        document.getElementById("login_menu").style.display = "none";
+        document.getElementById("register_menu").style.display = "none";
+        document.getElementById("register_btn").style.display = "none";
+        document.getElementById("login_btn").style.display = "none";
+        document.getElementById("pleasreglog").style.display = "none";
     }
     else{
         alert("User name or password in correct, please try again");
         event.preventDefault();
     }
 
+}
+
+function tryLogout(){
+    document.getElementById("userNameConnectedLabel").style.display = "none";
+    document.getElementById("logOut").style.display = "none";
+    document.getElementById("login_menu").style.display = "initial";
+    document.getElementById("register_btn").style.display = "initial";
+    document.getElementById("login_btn").style.display = "initial";
+    document.getElementById("pleasreglog").style.display = "block";
+    display_welcome();
 }
