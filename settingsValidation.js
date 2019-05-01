@@ -1,40 +1,46 @@
-var upKey = 38;
-var downKey = 40;
-var leftKey = 37;
-var rightKey = 39;
+var globalVariable ={upKey};
+var globalVariable ={downKey};
+var globalVariable ={leftKey};
+var globalVariable ={rightKey};
 
-var numOfBalls;
-var numOfMons;
-var numOfMins;
+var upKey = 'ArrowUp';
+var downKey = 'ArrowDown';
+var leftKey = 'ArrowLeft';
+var rightKey = 'ArrowRight';
 
-var color5;
-var color10;
-var color25;
+var globalVariable ={numOfBalls};
+var globalVariable ={numOfMons};
+var globalVariable ={numOfMins : 1};
+
+var globalVariable ={color5};
+var globalVariable ={color10};
+var globalVariable ={color25};
 
 function getKey(key,event){
-    var code = event.which || event.keyCode;
     if (key === 'up'){
         $("#upArrow").html(event.key);
-        upKey = code;
+        upKey = event.code;
     }else if (key === 'down'){
         $("#downArrow").html(event.key);
-        downKey = code;
+        downKey = event.code;
     }else if (key === 'left'){
         $("#leftArrow").html(event.key);
-        leftKey = code;
+        leftKey = event.code;
     }else if (key === 'right'){
         $("#rightArrow").html(event.key);
-        rightKey = code;
+        rightKey = event.code;
     }
 }
 
 
 function checkSettingsVal(){
 
-    numOfBalls = $("#number_of_balls").val();
+    var validate = true;
+    globalVariable.numOfBalls = $("#number_of_balls").val();
 
     if (numOfBalls < 50 || numOfBalls > 90){
         alert("Number of balls is illegal");
+        validate = false;
     }
 
     var radios = document.getElementsByName('monsters');
@@ -42,21 +48,29 @@ function checkSettingsVal(){
     {
         if (radios[i].checked)
         {
-            numOfMons = i + 1;
+            globalVariable.numOfMons = i + 1;
             break;
         }
     }
 
     if (!arrowsAreValid()){
         alert("Can not choose the same key for two different arrows.")
+        validate = false;
     }
 
-    color5 = $("#5pColor").val();
-    color10 = $("#10pColor").val();
-    color25 = $("#25pColor").val();
+    globalVariable.color5 = $("#5pColor").val();
+    globalVariable.color10 = $("#10pColor").val();
+    globalVariable.color25 = $("#25pColor").val();
 
-    numOfMins = document.getElementById("number_of_minutes").value();
-    //start the game.!
+    globalVariable.numOfMins = document.getElementById("number_of_minutes").value;
+    if(validate){
+        globalVariable.upKey = upKey;
+        globalVariable.downKey = downKey;
+        globalVariable.leftKey = leftKey;
+        globalVariable.rightKey = rightKey;
+        display_game_page();
+        getSettings();
+    }
 }
 
 function arrowsAreValid(){
@@ -71,22 +85,18 @@ function arrowsAreValid(){
 
 
 function getRandomSettings(){
-    upKey = 38;
-    downKey = 40;
-    leftKey = 37;
-    rightKey = 39;
 
     var min = 1;
     var max = 3;
-    numOfMons = Math.floor(Math.random() * max) + min;
+    globalVariable.numOfMons = Math.floor(Math.random() * max) + min;
 
     var min = 1;
     var max = 5;
-    numOfMins = Math.floor(Math.random() * max) + min;
+    globalVariable.numOfMins = Math.floor(Math.random() * max) + min;
 
     var min = 50;
     var max = 90;
-    numOfBalls = Math.floor(Math.random() * max) + min;
+    globalVariable.numOfBalls = Math.floor(Math.random() * (max - min)) + min;
 
     color5 = getRandomColor();
     color10 = getRandomColor();
@@ -98,6 +108,16 @@ function getRandomSettings(){
         color10 = getRandomColor();
         color25 = getRandomColor();
     }
+
+    globalVariable.color5 = color5;
+    globalVariable.color10 = color10;
+    globalVariable.color25 = color25;
+    globalVariable.upKey = 'ArrowUp';
+    globalVariable.downKey = 'ArrowDown';
+    globalVariable.leftKey = 'ArrowLeft';
+    globalVariable.rightKey = 'ArrowRight';
+    display_game_page();
+    getSettings();
 }
 
 function getRandomColor() {
@@ -108,4 +128,3 @@ function getRandomColor() {
     }
     return color;
   }
-  

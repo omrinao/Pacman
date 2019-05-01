@@ -1,4 +1,6 @@
-    /*var context = canvas.getContext("2d");
+    var canvas = document.getElementById("myCanvas");
+    var context = canvas.getContext("2d");
+
     var shape = new Object();
     var board;
     var score;
@@ -6,13 +8,28 @@
     var start_time;
     var time_elapsed;
     var interval;
-
-    Start();*/
     var direction;
+    var upKey;
+    var downKey;
+    var leftKey;
+    var rightKey;
+
+    var numOfBalls;
+    var numOfMons;
+    var numOfsecs;
+
+    var color5;
+    var color10;
+    var color25;
+
+    var background = new Image();
+    background.src = "pics/background.png";
+    var ball = new Image();
+    ball.src = "pics/ball.png";
 
     function Start() {
         lblScore.value = 0;
-        lblTime.value = 0;
+        lblTime.value = numOfsecs;
         lblLives.value = 3;
         time_elapsed = 0;
         score = 0;
@@ -77,22 +94,25 @@
      * @return {number}
      */
     function GetKeyPressed() {
-        if (keysDown['ArrowUp']) {
+        if (keysDown[upKey]) {
             return 1;
         }
-        if (keysDown['ArrowDown']) {
+        if (keysDown[downKey]) {
             return 2;
         }
-        if (keysDown['ArrowLeft']) {
+        if (keysDown[leftKey]) {
             return 3;
         }
-        if (keysDown['ArrowRight']) {
+        if (keysDown[rightKey]) {
             return 4;
         }
     }
 
     function Draw() {
         context.clearRect(0, 0, canvas.width, canvas.height); //clean board
+        context.drawImage(background, 0, 0, 600, 480);
+        context.shadowBlur = 10;
+        context.shadowColor = "black";
         lblScore.value = score;
         lblTime.value = time_elapsed;
         lblLives.value = lives;
@@ -146,16 +166,22 @@
                     context.fill();
                 }
                 else if (board[i][j] === 1) {
-                    context.beginPath();
-                    context.arc(center.x, center.y, 13, 0, 2 * Math.PI); // circle
-                    context.fillStyle = "black"; //color
-                    context.fill();
+                    /*context.beginPath();
+                    context.arc(center.x, center.y, 12, 0, 2 * Math.PI); // circle
+                    context.fillStyle = "white"; //color of balls
+                    context.fill();*/
+                    context.drawImage(ball, center.x - 12, center.y - 12, 25, 25);
                 } else if (board[i][j] === 4) {
                     context.beginPath();
                     context.rect(center.x - 30, center.y - 30, 50, 50);
                     context.fillStyle = "grey"; //color
                     context.fill();
                 }
+                /*else{
+                    var sticky = new Image();
+                    sticky.src = "pics/ghostorange.png";
+                    context.drawImage(sticky, center.x, center.y, 30, 30);
+                }*/
             }
         }
     }
@@ -192,7 +218,11 @@
         }
         board[shape.i][shape.j] = 2;
         var currentTime = new Date();
-        time_elapsed = (currentTime - start_time) / 1000;
+        time_elapsed = numOfsecs - (currentTime - start_time) / 1000;
+        if (time_elapsed <= 50){
+            window.clearInterval(interval);
+            window.alert("Time is up! you loose!");
+        }
         if (score >= 20 && time_elapsed <= 10) {
             pac_color = "green";
         }
@@ -202,4 +232,20 @@
         } else {
             Draw();
         }
+    }
+
+    function getSettings(){
+        upKey = globalVariable.upKey;
+        downKey = globalVariable.downKey;
+        leftKey = globalVariable.leftKey;
+        rightKey = globalVariable.rightKey;
+
+        numOfBalls = globalVariable.numOfBalls;
+        numOfMons = globalVariable.numOfMons;
+        numOfsecs = globalVariable.numOfMins * 60;
+
+        color5 = globalVariable.color5;
+        color10 = globalVariable.color10;
+        color25 = globalVariable.color25;
+        Start();
     }

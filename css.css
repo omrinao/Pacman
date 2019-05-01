@@ -187,6 +187,12 @@ footer{
   color: red;
 }
 
-.regHR{
-  width: 40%;
+.arrow_button{
+  margin-right: 50%;
+  float: right;
+}
+
+.setColorlabel{
+  margin-right: 5%;
+  float: left;
 }

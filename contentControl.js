@@ -33,6 +33,10 @@
         document.getElementById("last_name_error").style.display = "none";
         document.getElementById("email_error").style.display = "none";
         document.getElementById("BD_error").style.display = "none";
+        document.getElementById("upArrow").innerHTML = "Up Arrow";
+        document.getElementById("downArrow").innerHTML = "Down Arrow";
+        document.getElementById("leftArrow").innerHTML = "Left Arrow";
+        document.getElementById("rightArrow").innerHTML = "Right Arrow";
     }
 
     function display_welcome(){

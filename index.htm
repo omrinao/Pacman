@@ -3,9 +3,10 @@
 
 <head>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
-    <script type="text/javascript" src="game.js"></script>
     <script type="text/javascript" src="contentControl.js"></script>
     <script type="text/javascript" src="userAdministration.js"></script>
+    <script type="text/javascript" src="settingsValidation.js"></script>
+    
     <link rel="stylesheet" type="text/css" href="css.css">
 </head>
 
@@ -16,7 +17,7 @@
         <a href="#" id="login_menu" class="login_menu" onclick="display_login_page()">Login</a>
         <a href="#" id="register_menu" class="register_menu" onclick="display_register_page()" >Register</a>
         <a href="#" id="about_menu" class="about_menu" onclick="display_about_page()">About</a>
-        <a href="#" id="play_menu" class="play_menu" onclick="Start(); display_game_page();">Play - for test</a>
+        <a href="#" id="play_menu" class="play_menu" onclick="checkSettingsVal();">Play</a>
         <a href="#" id="logOut" style="display: none;float:right" onclick="tryLogout()"></a>
         <a id="userNameConnectedLabel" style="display: none; float:right; color: green;"></a>
     </nav>
@@ -116,16 +117,16 @@
     <STRONG class="setlabel">Choose the 4 keys to move the pacman up down etc:</STRONG>
     <br><br>
     <label class="setlabel" for="user_arrow">Up key: </label>
-    <button id="upArrow" class="form_button" value="button" type="button" onkeydown="getKey('up',event)"> Up Arrow </button><br><br>
+    <button id="upArrow" class="arrow_button" value="button" type="button" onkeydown="getKey('up',event)"> Up Arrow </button><br><br>
 
     <label class="setlabel" for="user_arrow">Down key: </label>
-    <button id="downArrow" class="form_button" value="button" type="button" onkeydown="getKey('down',event)"> Down Arrow </button><br><br>
+    <button id="downArrow" class="arrow_button" value="button" type="button" onkeydown="getKey('down',event)"> Down Arrow </button><br><br>
 
     <label class="setlabel" for="user_arrow">Left key: </label>
-    <button id="leftArrow" class="form_button" value="button" type="button" onkeydown="getKey('left',event)"> Left Arrow </button><br><br>
+    <button id="leftArrow" class="arrow_button" value="button" type="button" onkeydown="getKey('left',event)"> Left Arrow </button><br><br>
 
     <label class="setlabel" for="user_arrow">Right key: </label>
-    <button id="rightArrow" class="form_button" value="button" type="button" onkeydown="getKey('right',event)"> Right Arrow </button><br><br>
+    <button id="rightArrow" class="arrow_button" value="button" type="button" onkeydown="getKey('right',event)"> Right Arrow </button><br><br>
 
     <strong class="reglabel">Choose number of balls (between 50-90) for the game:</strong><br><br>
     <INPUT id = "number_of_balls" TYPE = "number"  min="50" max="90" value="50">
@@ -134,13 +135,13 @@
     <!--TODO determain balls colors.-->
     <STRONG class="setlabel">Choose colors to 3 kinds of balls:</STRONG><br><br>
 
-    <label class="setlabel" for="user_arrow">5 points color:</label>
+    <label class="setColorlabel" for="user_arrow">5 points color:</label>
     <input id="5pColor" type="color" name="favcolor" value="#ff0000"><br><br>
 
-    <label class="setlabel" for="user_arrow">10 points color:</label>
+    <label class="setColorlabel" for="user_arrow">10 points color:</label>
     <input id="10pColor" type="color" name="favcolor" value="#0000ff"><br><br>
 
-    <label class="setlabel" for="user_arrow">25 points color:</label>
+    <label class="setColorlabel" for="user_arrow">25 points color:</label>
     <input id="25pColor" type="color" name="favcolor" value="#00ff40"><br><br>
 
     
@@ -177,18 +178,8 @@
     <label class="gameLabel">LIVES:</label>
     <input class="gameInput" id="lblLives" type="text"/>
     <br/><br/>
-    <canvas id="canvas" width="600" height="480" style="border:2px solid #000000;"></canvas>
-    <script>
-    var context = canvas.getContext("2d");
-    var shape = new Object();
-    var board;
-    var score;
-    var pac_color;
-    var start_time;
-    var time_elapsed;
-    var lives;
-    var interval;
-        </script>
+    <canvas id="myCanvas" width="600" height="480" style="border:2px solid #000000;"></canvas>
+    <script type="text/javascript" src="game.js"></script>
 </div>
 
 </body>
