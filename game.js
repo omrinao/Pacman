@@ -3,7 +3,6 @@
 
     var shape = new Object();
 
-    var monShape = new Object();
     var board;
     var score;
     var pac_color;
@@ -29,6 +28,8 @@
     var ball = new Image();
     ball.src = "pics/ball.png";
 
+
+
     var monstarsArr = new Array();
     monstarsArr[0] = new Image();
     monstarsArr[0].src = "pics/ghostorange.png";
@@ -46,6 +47,7 @@
         time_elapsed = 0;
         score = 0;
         lives = 3;
+        var numOfMonstaresToCreate = numOfMons;
         board = new Array();
         score = 0;
         pac_color = "yellow";
@@ -75,19 +77,23 @@
                     cnt--;
                 }
                 //5,6,7 are the monstars.
-                if (i === 0 && j ===0 && numOfMons > 0){
+                if (i === 0 && j ===0 && numOfMonstaresToCreate > 0){
                     board[i][j] = 5;
-                    monShape.i = i;
-                    monShape.j = j;
-                    numOfMons--;
+                    monstarsArr[0].i = i;
+                    monstarsArr[0].j = j;
+                    numOfMonstaresToCreate--;
                 }
-                if (i === 9 && j === 9 && numOfMons > 0){
+                if (i === 9 && j === 9 && numOfMonstaresToCreate > 0){
                     board[i][j] = 6;
-                    numOfMons--;
+                    monstarsArr[2].i = i;
+                    monstarsArr[2].j = j;
+                    numOfMonstaresToCreate--;
                 }
-                if (i === 0 && j=== 9 && numOfMons > 0){
+                if (i === 0 && j=== 9 && numOfMonstaresToCreate > 0){
                     board[i][j] = 7;
-                    numOfMons--;
+                    monstarsArr[1].i = i;
+                    monstarsArr[1].j = j;
+                    numOfMonstaresToCreate--;
                 }
             }
         }
@@ -252,32 +258,36 @@
         if (board[shape.i][shape.j] === 1) {
             score++;
         }
-
-
         board[shape.i][shape.j] = 2;
 
-        
-        for (var num = 0; num < 1; num++){
-            
-            var direc =  getDirectionForMons(shape.j ,shape.i,monShape.j,monShape.i);
-            if (direc === 'up' && monShape.j > 0 && board[monShape.i][monShape.j - 1] !== 4){
-                monShape.j--;
-                board[monShape.i][monShape.j] = 5;
+        //j is for row.
+        //i is for col.
+        for (var num = 0; num < numOfMons; num++){
+            board[monstarsArr[num].i][monstarsArr[num].j] = 0;
+            var direc =  getDirectionForMons(shape.j ,shape.i,monstarsArr[num].j,monstarsArr[num].i,num);
+            if (direc === 'up' && monstarsArr[num].j > 0 && board[monstarsArr[num].i][monstarsArr[num].j + 1] !== 4){
+                monstarsArr[num].j--;
             }
-            if (direc === 'down' && monShape.j < 9 && board[monShape.i][monShape.j + 1] !== 4){
-                monShape.j++;
-                board[monShape.i][monShape.j] = 5;
+            else if (direc === 'down' && monstarsArr[num].j < 9 && board[monstarsArr[num].i][monstarsArr[num].j + 1] !== 4){
+                monstarsArr[num].j++;
             }
-            if (direc === 'left' && monShape.i > 0 && board[monShape.i - 1][monShape.j] !== 4){
-                monShape.i--;
-                board[monShape.i][monShape.j] = 5;
+            else if (direc === 'left' && monstarsArr[num].i > 0 && board[monstarsArr[num].i - 1][monstarsArr[num].j] !== 4){
+                monstarsArr[num].i--;
+                
             }
-            if (direc === 'right' && monShape.i < 9 && board[monShape.i + 1][monShape.j] !== 4){
-               monShape.i++;
-               board[monShape.i][monShape.j] = 5;
+            else if (direc === 'right' && monstarsArr[num].i < 9 && board[monstarsArr[num].i + 1][monstarsArr[num].j] !== 4){
+                monstarsArr[num].i++;
             }
+
+            if (num === 0){
+                board[monstarsArr[num].i][monstarsArr[num].j] = 5;
+            } else if (num ===1){
+                board[monstarsArr[num].i][monstarsArr[num].j] = 6;
+            }else if (num === 2){
+                board[monstarsArr[num].i][monstarsArr[num].j] = 7;
+            }
+
         }
-        board[monShape.i][monShape.j] = 0;
         
         
 
@@ -314,45 +324,66 @@
         Start();
     }
 
-    function getDirectionForMons(pacX,pacY,monX,monY){
+    function getDirectionForMons(pacRow,pacCol,monRow,monCol,num){
 
 
-        var distance = Math.pow(pacX,monX) + Math.pow(pacY,monY);
-        distance = Math.sqrt(distance);
-
-        var afterUp = Math.pow(pacX,monX) + Math.pow(pacY,monY-1);
+        var firstV = pacRow - (monRow - 1);
+        var secondV = pacCol - monCol;
+        var afterUp = Math.pow(firstV,2) + Math.pow(secondV,2);
         afterUp = Math.sqrt(afterUp);
-        if (distance > afterUp && monY > 0 && board[monX][monY - 1] !== 4){
+
+        firstV = pacRow - (monRow + 1);
+        secondV = pacCol - monCol;
+        var afterDown = Math.pow(firstV,2) + Math.pow(secondV,2);
+        afterDown = Math.sqrt(afterDown);
+
+        firstV = pacRow - monRow;
+        secondV = pacCol - (monCol - 1);
+        var afterLeft = Math.pow(firstV,2) + Math.pow(secondV,2);
+        afterLeft = Math.sqrt(afterLeft);
+
+        firstV = pacRow - monRow;
+        secondV = pacCol - (monCol + 1);
+        var afterRight = Math.pow(firstV,2) + Math.pow(secondV,2);
+        afterRight = Math.sqrt(afterRight);
+
+        
+        var direction = getMinDistance(afterUp,afterDown,afterLeft,afterRight,num);
+
+        if (direction === 'up' && monstarsArr[num].j > 0 && board[monstarsArr[num].i][monstarsArr[num].j - 1] !== 4){
             return 'up';
         }
-
-        var afterDown = Math.pow(pacX,monX) + Math.pow(pacY,monY+1);
-        afterDown = Math.sqrt(afterDown);
-        if (distance > afterDown && monY < 9  && board[monX][monY + 1] !== 4){
+        if (direction === 'down' && monstarsArr[num].j < 9  && board[monstarsArr[num].i][monstarsArr[num].j + 1] !== 4){
             return 'down';
         }
-
-        var afterLeft = Math.pow(pacX,monX-1) + Math.pow(pacY,monY);
-        afterLeft = Math.sqrt(afterLeft);
-        if (distance > afterLeft && monX > 0 && board[monX - 1][monY] !== 4){
+        if (direction === 'left' && monstarsArr[num].i > 0 && board[monstarsArr[num].i - 1][monstarsArr[num].j] !== 4){
             return 'left';
         }
-
-        var afterRight = Math.pow(pacX,monX+1) + Math.pow(pacY,monY);
-        afterRight = Math.sqrt(afterRight);
-        if (distance > afterRight && monX < 9 && board[monX + 1][monY] !== 4){
+        if (direction === 'right' && monstarsArr[num].i < 9 && board[monstarsArr[num].i + 1][monstarsArr[num].j] !== 4){
             return 'right';
         }
-        return getRandomMove(monX,monY);
+        return getRandomMove(num);
     }
 
-    function getRandomMove(monX,monY){
-        if (monY > 0 && board[monX][monY - 1] !== 4)
+    function getRandomMove(){
+        if (monstarsArr[num].j > 0 && board[monstarsArr[num].i][monstarsArr[num].j - 1] !== 4)
             return 'up';
-        if (monY < 9  && board[monX][monY + 1] !== 4)
-            return 'down';
-        if (monX > 0 && board[monX - 1][monY] !== 4)
+        if (monstarsArr[num].i > 0 && board[monstarsArr[num].i - 1][monstarsArr[num].j] !== 4)
             return 'left';
-        if (monX < 9 && board[monX + 1][monY] !== 4)
+        if (monstarsArr[num].j < 9  && board[monstarsArr[num].i][monstarsArr[num].j + 1] !== 4)
+            return 'down';
+        if (monstarsArr[num].i < 9 && board[monstarsArr[num].i + 1][monstarsArr[num].j] !== 4)
             return 'right';
+    }
+
+    function getMinDistance(afterUp,afterDown,afterLeft,afterRight){
+        if (afterUp < afterDown && afterUp < afterLeft && afterUp < afterRight){
+            return 'up';
+        }else if (afterDown < afterLeft && afterDown < afterRight){
+            return 'down';
+        }else if (afterLeft < afterRight){
+            return 'left';
+        } else {
+            return 'right';
+        }
     }

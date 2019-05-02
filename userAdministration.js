@@ -174,7 +174,6 @@ function tryLogin(){
         document.getElementById("register_menu").style.display = "none";
         document.getElementById("register_btn").style.display = "none";
         document.getElementById("login_btn").style.display = "none";
-        document.getElementById("pleasreglog").style.display = "none";
     }
     else{
         alert("User name or password in correct, please try again");
@@ -189,6 +188,5 @@ function tryLogout(){
     document.getElementById("login_menu").style.display = "initial";
     document.getElementById("register_btn").style.display = "initial";
     document.getElementById("login_btn").style.display = "initial";
-    document.getElementById("pleasreglog").style.display = "block";
     display_welcome();
 }

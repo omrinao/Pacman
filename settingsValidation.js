@@ -8,13 +8,13 @@ var downKey = 'ArrowDown';
 var leftKey = 'ArrowLeft';
 var rightKey = 'ArrowRight';
 
-var globalVariable ={numOfBalls};
-var globalVariable ={numOfMons};
+var globalVariable ={numOfBalls : 1};
+var globalVariable ={numOfMons : 1};
 var globalVariable ={numOfMins : 1};
 
-var globalVariable ={color5};
-var globalVariable ={color10};
-var globalVariable ={color25};
+var globalVariable ={color5 : "#ff0000"};
+var globalVariable ={color10 : "#0000ff"};
+var globalVariable ={color25 : "#00ff40"};
 
 function getKey(key,event){
     if (key === 'up'){
