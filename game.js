@@ -2,6 +2,8 @@
     var context = canvas.getContext("2d");
 
     var shape = new Object();
+
+    var monShape = new Object();
     var board;
     var score;
     var pac_color;
@@ -27,6 +29,16 @@
     var ball = new Image();
     ball.src = "pics/ball.png";
 
+    var monstarsArr = new Array();
+    monstarsArr[0] = new Image();
+    monstarsArr[0].src = "pics/ghostorange.png";
+
+    monstarsArr[1] = new Image();
+    monstarsArr[1].src = "pics/ghostpink.png";
+
+    monstarsArr[2] = new Image();
+    monstarsArr[2].src = "pics/ghostthelet.png";
+
     function Start() {
         lblScore.value = 0;
         lblTime.value = numOfsecs;
@@ -38,7 +50,7 @@
         score = 0;
         pac_color = "yellow";
         var cnt = 100;
-        var food_remain = 50;
+        var food_remain = numOfBalls;
         var pacman_remain = 1;
         start_time = new Date();
         for (var i = 0; i < 10; i++) {
@@ -61,6 +73,21 @@
                         board[i][j] = 0;
                     }
                     cnt--;
+                }
+                //5,6,7 are the monstars.
+                if (i === 0 && j ===0 && numOfMons > 0){
+                    board[i][j] = 5;
+                    monShape.i = i;
+                    monShape.j = j;
+                    numOfMons--;
+                }
+                if (i === 9 && j === 9 && numOfMons > 0){
+                    board[i][j] = 6;
+                    numOfMons--;
+                }
+                if (i === 0 && j=== 9 && numOfMons > 0){
+                    board[i][j] = 7;
+                    numOfMons--;
                 }
             }
         }
@@ -121,6 +148,15 @@
                 var center = new Object();
                 center.x = i * 60 + 30;
                 center.y = j * 46 + 30;
+                if (board[i][j] === 5){
+                    context.drawImage(monstarsArr[0], center.x - 12, center.y - 12, 25, 25);
+                }
+                if (board[i][j] === 6){
+                    context.drawImage(monstarsArr[1], center.x - 12, center.y - 12, 25, 25);
+                }
+                if (board[i][j] === 7){
+                    context.drawImage(monstarsArr[2], center.x - 12, center.y - 12, 25, 25);
+                }
                 if (board[i][j] === 2 && direction === "right") {
                     context.beginPath();
                     context.arc(center.x, center.y, 15, 0.1 * Math.PI, 1.85 * Math.PI); // half circle
@@ -166,11 +202,11 @@
                     context.fill();
                 }
                 else if (board[i][j] === 1) {
-                    /*context.beginPath();
+                    context.beginPath();
                     context.arc(center.x, center.y, 12, 0, 2 * Math.PI); // circle
                     context.fillStyle = "white"; //color of balls
-                    context.fill();*/
-                    context.drawImage(ball, center.x - 12, center.y - 12, 25, 25);
+                    context.fill();
+                    /*context.drawImage(ball, center.x - 12, center.y - 12, 25, 25);*/
                 } else if (board[i][j] === 4) {
                     context.beginPath();
                     context.rect(center.x - 30, center.y - 30, 50, 50);
@@ -216,10 +252,38 @@
         if (board[shape.i][shape.j] === 1) {
             score++;
         }
+
+
         board[shape.i][shape.j] = 2;
+
+        
+        for (var num = 0; num < 1; num++){
+            
+            var direc =  getDirectionForMons(shape.j ,shape.i,monShape.j,monShape.i);
+            if (direc === 'up' && monShape.j > 0 && board[monShape.i][monShape.j - 1] !== 4){
+                monShape.j--;
+                board[monShape.i][monShape.j] = 5;
+            }
+            if (direc === 'down' && monShape.j < 9 && board[monShape.i][monShape.j + 1] !== 4){
+                monShape.j++;
+                board[monShape.i][monShape.j] = 5;
+            }
+            if (direc === 'left' && monShape.i > 0 && board[monShape.i - 1][monShape.j] !== 4){
+                monShape.i--;
+                board[monShape.i][monShape.j] = 5;
+            }
+            if (direc === 'right' && monShape.i < 9 && board[monShape.i + 1][monShape.j] !== 4){
+               monShape.i++;
+               board[monShape.i][monShape.j] = 5;
+            }
+        }
+        board[monShape.i][monShape.j] = 0;
+        
+        
+
         var currentTime = new Date();
         time_elapsed = numOfsecs - (currentTime - start_time) / 1000;
-        if (time_elapsed <= 50){
+        if (time_elapsed <= 0){
             window.clearInterval(interval);
             window.alert("Time is up! you loose!");
         }
@@ -248,4 +312,47 @@
         color10 = globalVariable.color10;
         color25 = globalVariable.color25;
         Start();
+    }
+
+    function getDirectionForMons(pacX,pacY,monX,monY){
+
+
+        var distance = Math.pow(pacX,monX) + Math.pow(pacY,monY);
+        distance = Math.sqrt(distance);
+
+        var afterUp = Math.pow(pacX,monX) + Math.pow(pacY,monY-1);
+        afterUp = Math.sqrt(afterUp);
+        if (distance > afterUp && monY > 0 && board[monX][monY - 1] !== 4){
+            return 'up';
+        }
+
+        var afterDown = Math.pow(pacX,monX) + Math.pow(pacY,monY+1);
+        afterDown = Math.sqrt(afterDown);
+        if (distance > afterDown && monY < 9  && board[monX][monY + 1] !== 4){
+            return 'down';
+        }
+
+        var afterLeft = Math.pow(pacX,monX-1) + Math.pow(pacY,monY);
+        afterLeft = Math.sqrt(afterLeft);
+        if (distance > afterLeft && monX > 0 && board[monX - 1][monY] !== 4){
+            return 'left';
+        }
+
+        var afterRight = Math.pow(pacX,monX+1) + Math.pow(pacY,monY);
+        afterRight = Math.sqrt(afterRight);
+        if (distance > afterRight && monX < 9 && board[monX + 1][monY] !== 4){
+            return 'right';
+        }
+        return getRandomMove(monX,monY);
+    }
+
+    function getRandomMove(monX,monY){
+        if (monY > 0 && board[monX][monY - 1] !== 4)
+            return 'up';
+        if (monY < 9  && board[monX][monY + 1] !== 4)
+            return 'down';
+        if (monX > 0 && board[monX - 1][monY] !== 4)
+            return 'left';
+        if (monX < 9 && board[monX + 1][monY] !== 4)
+            return 'right';
     }
