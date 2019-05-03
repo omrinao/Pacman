@@ -4,6 +4,7 @@
     var shape = new Object();
 
     var board;
+    var ballsBoard;
     var score;
     var pac_color;
     var start_time;
@@ -22,13 +23,15 @@
     var color5;
     var color10;
     var color25;
+    var numOfcolor5;
+    var numOfcolor10;
+    var numOfcolor25;
+
+    var firstDraw;
+    var mySound;
 
     var background = new Image();
     background.src = "pics/background.png";
-    var ball = new Image();
-    ball.src = "pics/ball.png";
-
-
 
     var monstarsArr = new Array();
     monstarsArr[0] = new Image();
@@ -41,24 +44,25 @@
     monstarsArr[2].src = "pics/ghostthelet.png";
 
     function Start() {
-        lblScore.value = 0;
-        lblTime.value = numOfsecs;
-        lblLives.value = 3;
         time_elapsed = 0;
-        score = 0;
         lives = 3;
+        score = 0;
         var numOfMonstaresToCreate = numOfMons;
         board = new Array();
-        score = 0;
+        ballsBoard = new Array();
         pac_color = "yellow";
-        var cnt = 100;
+        var cnt = 182;
         var food_remain = numOfBalls;
         var pacman_remain = 1;
+        mySound = document.createElement('audio');
+        mySound.src="sources/GameSong.mp3";
+        mySound.play();
         start_time = new Date();
-        for (var i = 0; i < 10; i++) {
+        for (var i = 0; i < 14; i++) {
             board[i] = new Array();
+            ballsBoard[i] = new Array();
             //put obstacles in (i=3,j=3) and (i=3,j=4) and (i=3,j=5), (i=6,j=1) and (i=6,j=2)
-            for (var j = 0; j < 10; j++) {
+            for (var j = 0; j < 13; j++) {
                 if ((i === 3 && j === 3) || (i === 3 && j === 4) || (i === 3 && j === 5) || (i === 6 && j === 1) || (i === 6 && j === 2)) {
                     board[i][j] = 4;
                 } else {
@@ -95,6 +99,7 @@
                     monstarsArr[1].j = j;
                     numOfMonstaresToCreate--;
                 }
+                ballsBoard[i][j] = "check";
             }
         }
         while (food_remain > 0) {
@@ -143,17 +148,19 @@
 
     function Draw() {
         context.clearRect(0, 0, canvas.width, canvas.height); //clean board
-        context.drawImage(background, 0, 0, 600, 480);
+        context.drawImage(background, 0, 0, canvas.width, canvas.height);
         context.shadowBlur = 10;
         context.shadowColor = "black";
-        lblScore.value = score;
-        lblTime.value = time_elapsed;
-        lblLives.value = lives;
-        for (var i = 0; i < 10; i++) {
-            for (var j = 0; j < 10; j++) {
+        
+        context.font = "bold 20px cursive";
+        context.fillText("Score: " + score,30,50);
+        context.fillText("Time Left: " + time_elapsed,30,90);
+        context.fillText("Lives: " + lives,30,130);
+        for (var i = 0; i < 14; i++) {
+            for (var j = 0; j < 13; j++) {
                 var center = new Object();
-                center.x = i * 60 + 30;
-                center.y = j * 46 + 30;
+                center.x = i * 50 + 320;
+                center.y = j * 40 + 20;
                 if (board[i][j] === 5){
                     context.drawImage(monstarsArr[0], center.x - 12, center.y - 12, 25, 25);
                 }
@@ -196,6 +203,29 @@
                     context.fillStyle = "black"; //color
                     context.fill();
                 }
+                else if (board[i][j] === 2) {
+                    context.beginPath();
+                    context.arc(center.x, center.y, 15, 0.1 * Math.PI, 1.85 * Math.PI); // half circle
+                    context.lineTo(center.x, center.y);
+                    context.fillStyle = pac_color; //color
+                    context.fill();
+                    context.beginPath();
+                    context.arc(center.x + 2, center.y - 9, 3, 0, 2 * Math.PI); // circle
+                    context.fillStyle = "black"; //color
+                    context.fill();
+                } 
+                else if (board[i][j] === 1) {
+                    context.beginPath();
+                    context.arc(center.x, center.y, 12, 0, 2 * Math.PI); // circle
+                    if (firstDraw == 0){
+                        context.fillStyle = drawBall(); //color of balls
+                        ballsBoard[i][j] = drawBall();
+                    }
+                    else{
+                        context.fillStyle = ballsBoard[i][j];
+                    }
+                    context.fill();
+                }
                 else if (board[i][j] === 2 && direction === "down") {
                     context.beginPath();
                     context.arc(center.x, center.y, 15, 0.60 * Math.PI, 0.35 * Math.PI); // half circle
@@ -207,25 +237,15 @@
                     context.fillStyle = "black"; //color
                     context.fill();
                 }
-                else if (board[i][j] === 1) {
+                else if (board[i][j] === 4) {
                     context.beginPath();
-                    context.arc(center.x, center.y, 12, 0, 2 * Math.PI); // circle
-                    context.fillStyle = "white"; //color of balls
-                    context.fill();
-                    /*context.drawImage(ball, center.x - 12, center.y - 12, 25, 25);*/
-                } else if (board[i][j] === 4) {
-                    context.beginPath();
-                    context.rect(center.x - 30, center.y - 30, 50, 50);
+                    context.rect(center.x - 15, center.y - 20, 30, 40);
                     context.fillStyle = "grey"; //color
                     context.fill();
                 }
-                /*else{
-                    var sticky = new Image();
-                    sticky.src = "pics/ghostorange.png";
-                    context.drawImage(sticky, center.x, center.y, 30, 30);
-                }*/
             }
         }
+        firstDraw = 1;
     }
 
     function UpdatePosition() {
@@ -255,8 +275,15 @@
                 direction = "right";
             }
         }
-        if (board[shape.i][shape.j] === 1) {
-            score++;
+        //updating score
+        if (board[shape.i][shape.j] === 1 && ballsBoard[shape.i][shape.j] === color5) {
+            score+=5;
+        }
+        else if (board[shape.i][shape.j] === 1 && ballsBoard[shape.i][shape.j] === color10) {
+            score+=10;
+        }
+        else if (board[shape.i][shape.j] === 1 && ballsBoard[shape.i][shape.j] === color25) {
+            score+=25;
         }
         board[shape.i][shape.j] = 2;
 
@@ -281,7 +308,7 @@
 
             if (num === 0){
                 board[monstarsArr[num].i][monstarsArr[num].j] = 5;
-            } else if (num ===1){
+            } else if (num === 1){
                 board[monstarsArr[num].i][monstarsArr[num].j] = 6;
             }else if (num === 2){
                 board[monstarsArr[num].i][monstarsArr[num].j] = 7;
@@ -292,22 +319,81 @@
         
 
         var currentTime = new Date();
-        time_elapsed = numOfsecs - (currentTime - start_time) / 1000;
-        if (time_elapsed <= 0){
+        time_elapsed = (numOfsecs - (currentTime - start_time) / 1000).toFixed(1);
+        if (time_elapsed <= 0 && score >= 150){
+            time_elapsed = 0;
             window.clearInterval(interval);
-            window.alert("Time is up! you loose!");
+            display_end_game("We have a WINNER!!!" + "\n" + "Your score is: " + score);
         }
-        if (score >= 20 && time_elapsed <= 10) {
+        else if (time_elapsed <= 55 && score < 150){
+            time_elapsed = 0;
+            window.clearInterval(interval);
+            display_end_game("You can do better..." + "\n" + "Your score is: " + score);
+        }
+        else if (score >= 20 && time_elapsed <= 10) {
             pac_color = "green";
         }
-        if (score === 50) {
+        else if (score === 350) {
             window.clearInterval(interval);
-            window.alert("Game completed");
-        } else {
+            display_end_game("Game Completed!" + "\n" + "Your score is: " + score);
+        } 
+        else if (lives === 0){
+            window.clearInterval(interval);
+            display_end_game("You Lost!" + "\n" + "Your score is: " + score);
+        }
+        else {
             Draw();
         }
     }
 
+    function display_end_game(message){
+        // Get the modal
+        if (document.getElementById("game").style.display != "none"){
+            var modal = document.getElementById("myGame");
+            // Get the <span> element that closes the modal
+            var spanGame = document.getElementsByClassName("closeGame")[0];
+            var playAgain = document.getElementById("play_again");
+            var returnHome = document.getElementById("return_home");
+            mySound.src = "";
+            modal.style.display = "block";
+            document.getElementById("gameEnd").style.display = "block";
+            document.getElementById("endGameMessage").innerText = message;
+            // When the user clicks on <span> (x), close the modal
+            spanGame.onclick = function() {
+                modal.style.display = "none";
+                display_welcome();
+            }
+
+            playAgain.onclick = function() {
+                modal.style.display = "none";
+                checkSettingsVal();
+            }
+            returnHome.onclick = function() {
+                modal.style.display = "none";
+                display_welcome();
+            }
+
+            // Handle ESC key (key code 27)
+            document.addEventListener('keyup', function(e) {
+                if (e.keyCode == 27) {
+                    modal.style.display = "none";
+                }
+            });
+
+            // When the user clicks anywhere outside of the modal, close it
+            window.onclick = function(event) {
+                if (event.target == modal) {
+                    modal.style.display = "none";
+                    display_welcome();
+                }
+            }
+        }
+    }
+
+
+    /**
+     * this function gets the user's settings and starts the game.
+     */
     function getSettings(){
         upKey = globalVariable.upKey;
         downKey = globalVariable.downKey;
@@ -321,9 +407,23 @@
         color5 = globalVariable.color5;
         color10 = globalVariable.color10;
         color25 = globalVariable.color25;
+        numOfcolor5 = numOfBalls * 0.6;
+        numOfcolor10 = numOfBalls * 0.3;
+        numOfcolor25 = numOfBalls * 0.1;
+        firstDraw = 0;
+
         Start();
     }
 
+
+    /**
+     * this function calculate the best direction for a monster to go after the pacman
+     * @param {} pacRow 
+     * @param {*} pacCol 
+     * @param {*} monRow 
+     * @param {*} monCol 
+     * @param {*} num 
+     */
     function getDirectionForMons(pacRow,pacCol,monRow,monCol,num){
 
 
@@ -365,7 +465,12 @@
         return getRandomMove(num);
     }
 
-    function getRandomMove(){
+
+    /**
+     * this function returns a random move to a given monster
+     * @param {} num 
+     */
+    function getRandomMove(num){
         if (monstarsArr[num].j > 0 && board[monstarsArr[num].i][monstarsArr[num].j - 1] !== 4)
             return 'up';
         if (monstarsArr[num].i > 0 && board[monstarsArr[num].i - 1][monstarsArr[num].j] !== 4)
@@ -376,6 +481,14 @@
             return 'right';
     }
 
+
+    /**
+     * this function return the minimum distance between a monster and the pacman
+     * @param {} afterUp 
+     * @param {*} afterDown 
+     * @param {*} afterLeft 
+     * @param {*} afterRight 
+     */
     function getMinDistance(afterUp,afterDown,afterLeft,afterRight){
         if (afterUp < afterDown && afterUp < afterLeft && afterUp < afterRight){
             return 'up';
@@ -385,5 +498,41 @@
             return 'left';
         } else {
             return 'right';
+        }
+    }
+
+
+    /**
+     * this function returns the color of the ball we want to draw
+     */
+    function drawBall(){
+        var rand = Math.random();
+
+        if (rand <= 0.1 && numOfcolor5 > 0){
+            numOfcolor5--;
+            return color5;
+        }
+        else if (rand > 0.1 && rand <= 0.4 && numOfcolor10 > 0){
+            numOfcolor10--;
+            return color10;
+        }
+        else if (rand > 0.4 && numOfcolor25 > 0){
+            numOfcolor25--;
+            return color25;
+        }
+        else if (numOfcolor25 > 0){
+            numOfcolor25--;
+            return color25;
+        }
+        else if (numOfcolor10 > 0){
+            numOfcolor10--;
+            return color10;
+        }
+        else if (numOfcolor5 > 0){
+            numOfcolor5--;
+            return color5;
+        }
+        else{
+            return color5;
         }
     }

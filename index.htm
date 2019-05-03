@@ -19,8 +19,9 @@
         <a href="#" id="register_menu" class="register_menu" onclick="display_register_page()" >Register</a>
         <a href="#" id="about_menu" class="about_menu" onclick="display_about_page()">About</a>
         <a href="#" id="play_menu" class="play_menu" onclick="checkSettingsVal();">Play</a>
+        <a href="#" id="settings_menu" style="display: none;" class="settings_menu" onclick="display_settings_page();">Settings</a>
         <a href="#" id="logOut" style="display: none;float:right" onclick="tryLogout()"></a>
-        <a id="userNameConnectedLabel" style="display: none; float:right; color: green;"></a>
+        <a id="userNameConnectedLabel" style="display: none; float:right; color: #d94f5c;"></a>
     </nav>
 <!--welcome page-->
 <div id = "welcome">
@@ -34,7 +35,7 @@
 
 <!--about page-->
 
-<!-- The Modal -->
+<!-- The About Modal -->
 <div id="myModal" class="modal">
 
   <!-- Modal content -->
@@ -44,6 +45,19 @@
   </div>
 
 </div>
+
+<!-- The Game End Modal -->
+<div id="myGame" class="modal">
+
+    <!-- Modal content -->
+    <div id="gameEnd"class="modal-content">
+      <span class="closeGame">&times;</span>
+      <p align=center id="endGameMessage">Some text </p>
+      <button id= "play_again" class="gameButton" type="button"> Play Again! </button>
+      <button id= "return_home" class="gameButton" type="button"> Home Page </button>
+    </div>
+  
+  </div>
 
 <!--register page-->
 <div id = "register_page" class="form_reg" style="display : none">
@@ -163,23 +177,14 @@
      <br><br>
      
      <button id= "random_game" class="form_button" type="button" onclick="getRandomSettings()"> Random settings </button>
-     <button id= "play_game" class="form_button" type="button" onclick="display_game_page(); Start();"> Play! </button>       
+     <button id= "play_game" class="form_button" type="button" onclick="checkSettingsVal()"> Play! </button>       
 
 </div>
-
-
 
 <div id="game" class="game" style="display : none;">
-    <label class="gameLabel">SCORE:</label>
-    <input class="gameInput" id="lblScore" type="text"/>
-    <label class="gameLabel">TIME LEFT:</label>
-    <input class="gameInput" id="lblTime" type="text"/>
-    <label class="gameLabel">LIVES:</label>
-    <input class="gameInput" id="lblLives" type="text"/>
-    <br/><br/>
-    <canvas id="myCanvas" width="600" height="480" style="border:2px solid #000000;"></canvas>
+    <canvas id="myCanvas" width="1000" height="520" style="border:2px solid #000000;"></canvas>
     <script type="text/javascript" src="game.js"></script>
-</div>
+    </div>
 
 </body>
 <footer>
