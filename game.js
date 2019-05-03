@@ -325,7 +325,7 @@
             window.clearInterval(interval);
             display_end_game("We have a WINNER!!!" + "\n" + "Your score is: " + score);
         }
-        else if (time_elapsed <= 55 && score < 150){
+        else if (time_elapsed <= 0 && score < 150){
             time_elapsed = 0;
             window.clearInterval(interval);
             display_end_game("You can do better..." + "\n" + "Your score is: " + score);
