@@ -5,6 +5,7 @@
 
     var board;
     var ballsBoard;
+	var boardForSecondTry;
     var score;
     var pac_color;
     var start_time;
@@ -26,7 +27,7 @@
     var numOfcolor5;
     var numOfcolor10;
     var numOfcolor25;
-
+	var wallPos;
     var firstDraw;
     var mySound;
 
@@ -57,9 +58,12 @@
         pac_color = "yellow";
         var cnt = 182;
         var food_remain = numOfBalls;
+		boardForSecondTry = new Array();
         var pacman_remain = 1;
         var medicine_remain = 3;
         var extratime_remain = 1;
+		wallPos = new Array();
+        initWalls();
         mySound = document.createElement('audio');
         mySound.src="sources/GameSong.mp3";
         mySound.play();
@@ -70,10 +74,11 @@
             for (var i = 0; i < 14; i++) {
                 board[i] = new Array();
                 ballsBoard[i] = new Array();
+				boardForSecondTry[i] = new Array();
                 //put obstacles in (i=3,j=3) and (i=3,j=4) and (i=3,j=5), (i=6,j=1) and (i=6,j=2)
                 for (var j = 0; j < 13; j++) {
-                    if ((i === 3 && j === 3) || (i === 3 && j === 4) || (i === 3 && j === 5) || (i === 6 && j === 1) || (i === 6 && j === 2)) {
-                        ballsBoard[i][j] = board[i][j] = 4;
+                    if (wallPos[i][j] === 1) {
+                        boardForSecondTry[i][j] = ballsBoard[i][j] = board[i][j] = 4;
                     } else {
                         var randomNum = Math.random();
                         if (randomNum <= 1.0 * (food_remain + medicine_remain + extratime_remain) / (cnt + medicine_remain + extratime_remain)) {
@@ -100,19 +105,19 @@
                         cnt--;
                     }
                     //5,6,7 are the monstars.
-                    if (i === 0 && j ===0 && numOfMonstaresToCreate > 0){
+                    if (i === 0 && j === 0 && numOfMonstaresToCreate > 0){
                         ballsBoard[i][j] = board[i][j] = 5;
                         monstarsArr[0].i = i;
                         monstarsArr[0].j = j;
                         numOfMonstaresToCreate--;
                     }
-                    if (i === 9 && j === 9 && numOfMonstaresToCreate > 0){
+                    if (i === 13 && j === 13 && numOfMonstaresToCreate > 0){
                         ballsBoard[i][j] = board[i][j] = 6;
                         monstarsArr[2].i = i;
                         monstarsArr[2].j = j;
                         numOfMonstaresToCreate--;
                     }
-                    if (i === 0 && j=== 9 && numOfMonstaresToCreate > 0){
+                    if (i === 0 && j === 13 && numOfMonstaresToCreate > 0){
                         ballsBoard[i][j] = board[i][j] = 7;
                         monstarsArr[1].i = i;
                         monstarsArr[1].j = j;
@@ -144,11 +149,11 @@
 
 
     function findRandomEmptyCell(board) {
-        var i = Math.floor((Math.random() * 9) + 1);
-        var j = Math.floor((Math.random() * 9) + 1);
+        var i = Math.floor((Math.random() * 13) + 1);
+        var j = Math.floor((Math.random() * 14) + 1);
         while (board[i][j] !== 0) {
-            i = Math.floor((Math.random() * 9) + 1);
-            j = Math.floor((Math.random() * 9) + 1);
+            i = Math.floor((Math.random() * 13) + 1);
+            j = Math.floor((Math.random() * 14) + 1);
         }
         return [i, j];
     }
@@ -258,7 +263,7 @@
                 } 
                 else if (board[i][j] === 4) {
                     context.beginPath();
-                    context.rect(center.x - 15, center.y - 20, 30, 40);
+                    context.rect(center.x - 25, center.y - 20, 50, 40);
                     context.fillStyle = "grey"; //color
                     context.fill();
                 }
@@ -328,19 +333,21 @@
         //j is for row.
         //i is for col.
         for (var num = 0; num < numOfMons; num++){
-            board[monstarsArr[num].i][monstarsArr[num].j] = 0;
+            var tmpI = monstarsArr[num].i;
+            var tmpJ = monstarsArr[num].j;
+            board[monstarsArr[num].i][monstarsArr[num].j] = boardForSecondTry[tmpI][tmpJ];
             var direc =  getDirectionForMons(shape.j ,shape.i,monstarsArr[num].j,monstarsArr[num].i,num);
-            if (direc === 'up' && monstarsArr[num].j > 0 && board[monstarsArr[num].i][monstarsArr[num].j + 1] !== 4){
+            if (direc === 'up' && monstarsArr[num].j > 0 && board[monstarsArr[num].i][monstarsArr[num].j - 1] !== 4 && monsterInPos(monstarsArr[num].i,monstarsArr[num].j-1)){
                 monstarsArr[num].j--;
             }
-            else if (direc === 'down' && monstarsArr[num].j < 9 && board[monstarsArr[num].i][monstarsArr[num].j + 1] !== 4){
+            else if (direc === 'down' && monstarsArr[num].j < 9 && board[monstarsArr[num].i][monstarsArr[num].j + 1] !== 4 && monsterInPos(monstarsArr[num].i,monstarsArr[num].j+1)){
                 monstarsArr[num].j++;
             }
-            else if (direc === 'left' && monstarsArr[num].i > 0 && board[monstarsArr[num].i - 1][monstarsArr[num].j] !== 4){
+            else if (direc === 'left' && monstarsArr[num].i > 0 && board[monstarsArr[num].i - 1][monstarsArr[num].j] !== 4 && monsterInPos(monstarsArr[num].i - 1,monstarsArr[num].j)){
                 monstarsArr[num].i--;
                 
             }
-            else if (direc === 'right' && monstarsArr[num].i < 9 && board[monstarsArr[num].i + 1][monstarsArr[num].j] !== 4){
+            else if (direc === 'right' && monstarsArr[num].i < 9 && board[monstarsArr[num].i + 1][monstarsArr[num].j] !== 4 && monsterInPos(monstarsArr[num].i + 1,monstarsArr[num].j)){
                 monstarsArr[num].i++;
             }
 
@@ -350,6 +357,19 @@
                 board[monstarsArr[num].i][monstarsArr[num].j] = 6;
             }else if (num === 2){
                 board[monstarsArr[num].i][monstarsArr[num].j] = 7;
+            }
+			
+			if (mostaerCatchPack()){
+                lives--;
+                score = score - 10;
+                if (lives === 0){
+                    window.clearInterval(interval);
+                    display_end_game("You Lost!" + "\n" + "Your score is: " + score);
+                }
+                else{
+                    alert("nice try! have another one!");
+                    drawCurrBoardAsNew();
+                }
             }
 
         }
@@ -511,13 +531,14 @@
      * @param {} num 
      */
     function getRandomMove(num){
-        if (monstarsArr[num].j > 0 && board[monstarsArr[num].i][monstarsArr[num].j - 1] !== 4)
+        var randomNum = Math.random();
+        if (randomNum <= 0.25 && monstarsArr[num].j > 0 && board[monstarsArr[num].i][monstarsArr[num].j - 1] !== 4)
             return 'up';
-        if (monstarsArr[num].i > 0 && board[monstarsArr[num].i - 1][monstarsArr[num].j] !== 4)
+        if (randomNum <= 0.5 && monstarsArr[num].i > 0 && board[monstarsArr[num].i - 1][monstarsArr[num].j] !== 4)
             return 'left';
-        if (monstarsArr[num].j < 9  && board[monstarsArr[num].i][monstarsArr[num].j + 1] !== 4)
+        if (randomNum <= 0.75 && monstarsArr[num].j < 13  && board[monstarsArr[num].i][monstarsArr[num].j + 1] !== 4)
             return 'down';
-        if (monstarsArr[num].i < 9 && board[monstarsArr[num].i + 1][monstarsArr[num].j] !== 4)
+        if (monstarsArr[num].i < 13 && board[monstarsArr[num].i + 1][monstarsArr[num].j] !== 4)
             return 'right';
     }
 
@@ -574,5 +595,162 @@
         }
         else{
             return color5;
+        }
+    }
+	
+	function monsterInPos(checkI,checkJ){
+        if (board[checkI][checkJ] !== 5 && board[checkI][checkJ] !== 6 && board[checkI][checkJ] !== 7)
+            return true;
+        else
+            return false;
+    }
+
+    function mostaerCatchPack(){
+        for (var num = 0 ; num < monstarsArr.length; num++){
+            if (shape.i === monstarsArr[num].i && shape.j === monstarsArr[num].j){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    function drawCurrBoardAsNew(){
+        context.clearRect(0, 0, canvas.width, canvas.height); //clean board
+        context.drawImage(background, 0, 0, canvas.width, canvas.height);
+        context.shadowBlur = 10;
+        context.shadowColor = "black";
+        
+        context.font = "bold 20px cursive";
+        context.fillText("Score: " + score,30,50);
+        context.fillText("Time Left: " + time_elapsed,30,90);
+        context.fillText("Lives: " + lives,30,130);
+        var numOfMonstaresToCreate = numOfMons;
+        for (var i = 0; i < 14; i++) {
+            for (var j = 0; j < 13; j++) {
+                if (i === 0 && j === 0 && numOfMonstaresToCreate > 0){
+                    board[i][j] = ballsBoard[i][j] = 5;
+                    numOfMonstaresToCreate--;
+                    monstarsArr[0].i = i;
+                    monstarsArr[0].j = j;
+                    boardForSecondTry[i][j] = 5;
+                }else if (i === 9 && j === 9 && numOfMonstaresToCreate > 0){
+                    ballsBoard[i][j] = board[i][j] = 6;
+                    monstarsArr[2].i = i;
+                    monstarsArr[2].j = j;
+                    numOfMonstaresToCreate--;
+                    boardForSecondTry[i][j] = 6;
+                }else if (i === 0 && j=== 9 && numOfMonstaresToCreate > 0){
+                    ballsBoard[i][j] = board[i][j] = 7;
+                    monstarsArr[1].i = i;
+                    monstarsArr[1].j = j;
+                    numOfMonstaresToCreate--;
+                    boardForSecondTry[i][j] = 7;
+                }else if (boardForSecondTry[i][j] === 2 || boardForSecondTry[i][j] === 5 || boardForSecondTry[i][j] === 6 || boardForSecondTry[i][j] ===7){
+                    board[i][j] = boardForSecondTry[i][j] = 0;
+                } else {
+                    board[i][j] = boardForSecondTry[i][j];
+                }
+            }
+        }
+        getNewRrandomPosForPac();
+        Draw();
+    }
+
+    function getNewRrandomPosForPac(){
+        var randomI;
+        var randomJ;
+        var foundNewPos = false;
+        while (!foundNewPos){
+            randomI = Math.random();
+            randomJ =  Math.random();
+            randomI = ((randomI * 14)| 0);
+            randomJ = ((randomJ * 13)| 0);
+            if (board[randomI][randomJ] !== 4  && board[randomI][randomJ] !== 5 &&
+                board[randomI][randomJ] !== 6 && board[randomI][randomJ] !== 7 &&
+                board[randomI][randomJ] !== 1){
+                    shape.i = randomI;
+                    shape.j = randomJ;
+                    board[randomI][randomJ] = 2;
+            }
+            foundNewPos = true;
+        }
+    }
+
+    function initWalls(){
+        for(var i = 0; i < 14; i++){
+            wallPos[i] = new Array();
+        }
+        wallPos[1][2] = 1;
+
+        wallPos[1][2] = 1;
+        wallPos[1][4] = 1;
+        wallPos[1][5] = 1;
+        wallPos[1][6] = 1;
+        wallPos[1][8] = 1;
+        wallPos[1][9] = 1;
+        wallPos[1][11] = 1;
+
+        wallPos[2][9] = 1;
+        wallPos[2][11] = 1;
+
+        wallPos[3][3] = 1;
+        wallPos[3][4] = 1;
+        wallPos[3][11] = 1;
+
+        wallPos[4][1] = 1;
+        wallPos[4][3] = 1;
+        wallPos[4][4] = 1;
+        wallPos[4][6] = 1;
+        wallPos[4][7] = 1;
+        wallPos[4][9] = 1;
+        wallPos[4][10] = 1;
+        wallPos[4][11] = 1;
+
+        wallPos[5][1] = 1;
+        wallPos[5][7] = 1;
+
+        wallPos[6][1] = 1;
+        wallPos[6][4] = 1;
+        wallPos[6][5] = 1;
+        wallPos[6][7] = 1;
+        wallPos[6][9] = 1;
+        wallPos[6][10] = 1;
+
+        wallPos[7][1] = 1;
+        wallPos[7][4] = 1;
+        wallPos[7][7] = 1;
+        wallPos[7][9] = 1;
+        wallPos[7][10] = 1;
+
+        wallPos[8][1] = 1;
+        wallPos[8][4] = 1;
+
+        wallPos[9][1] = 1;
+        wallPos[9][2] = 1;
+        wallPos[9][4] = 1;
+        wallPos[9][6] = 1;
+        wallPos[9][7] = 1;
+        wallPos[9][8] = 1;
+        wallPos[9][9] = 1;
+
+        wallPos[10][2] = 1;
+        wallPos[10][11] = 1;
+
+        wallPos[11][2] = 1;
+        wallPos[11][4] = 1;
+        wallPos[11][5] = 1;
+        wallPos[11][7] = 1;
+        wallPos[11][8] = 1;
+        wallPos[11][9] = 1;
+        wallPos[11][11] = 1;
+
+        wallPos[12][11] = 1;
+
+        for (var i = 0; i < 14; i++){
+            for (var j = 0; j < 13;j++){
+                if (wallPos[i][j] === null){
+                    wallPos[i][j] === 0;
+                }
+            }
         }
     }
