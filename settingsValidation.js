@@ -38,7 +38,7 @@ function checkSettingsVal(){
     var validate = true;
     globalVariable.numOfBalls = $("#number_of_balls").val();
 
-    if (numOfBalls < 50 || numOfBalls > 90){
+    if (globalVariable.numOfBalls < 50 || globalVariable.numOfBalls > 90){
         alert("Number of balls is illegal");
         validate = false;
     }

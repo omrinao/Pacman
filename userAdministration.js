@@ -170,7 +170,6 @@ function tryLogin(){
         document.getElementById("userNameConnectedLabel").style.display = "block";
         document.getElementById("logOut").textContent = "Log Out";
         document.getElementById("logOut").style.display = "block";
-        document.getElementById("settings_menu").style.display = "block";
         document.getElementById("login_menu").style.display = "none";
         document.getElementById("register_menu").style.display = "none";
         document.getElementById("register_btn").style.display = "none";
@@ -189,6 +188,7 @@ function tryLogout(){
     document.getElementById("login_menu").style.display = "initial";
     document.getElementById("register_menu").style.display = "initial";
     document.getElementById("settings_menu").style.display = "none";
+    document.getElementById("restart_menu").style.display = "none";
     document.getElementById("register_btn").style.display = "initial";
     document.getElementById("login_btn").style.display = "initial";
     display_welcome();

@@ -33,6 +33,12 @@
     var background = new Image();
     background.src = "pics/background.png";
 
+    var medicine = new Image();
+    medicine.src = "pics/medicine.png";
+
+    var extime = new Image();
+    extime.src = "pics/extratime.png";
+
     var monstarsArr = new Array();
     monstarsArr[0] = new Image();
     monstarsArr[0].src = "pics/ghostorange.png";
@@ -48,65 +54,82 @@
         lives = 3;
         score = 0;
         var numOfMonstaresToCreate = numOfMons;
-        board = new Array();
-        ballsBoard = new Array();
         pac_color = "yellow";
         var cnt = 182;
         var food_remain = numOfBalls;
         var pacman_remain = 1;
+        var medicine_remain = 3;
+        var extratime_remain = 1;
         mySound = document.createElement('audio');
         mySound.src="sources/GameSong.mp3";
         mySound.play();
         start_time = new Date();
-        for (var i = 0; i < 14; i++) {
-            board[i] = new Array();
-            ballsBoard[i] = new Array();
-            //put obstacles in (i=3,j=3) and (i=3,j=4) and (i=3,j=5), (i=6,j=1) and (i=6,j=2)
-            for (var j = 0; j < 13; j++) {
-                if ((i === 3 && j === 3) || (i === 3 && j === 4) || (i === 3 && j === 5) || (i === 6 && j === 1) || (i === 6 && j === 2)) {
-                    board[i][j] = 4;
-                } else {
-                    var randomNum = Math.random();
-                    if (randomNum <= 1.0 * food_remain / cnt) {
-                        food_remain--;
-                        board[i][j] = 1;
-                    } else if (randomNum < 1.0 * (pacman_remain + food_remain) / cnt) {
-                        shape.i = i;
-                        shape.j = j;
-                        pacman_remain--;
-                        board[i][j] = 2;
+        if (firstDraw === 0){
+            board = new Array();
+            ballsBoard = new Array();
+            for (var i = 0; i < 14; i++) {
+                board[i] = new Array();
+                ballsBoard[i] = new Array();
+                //put obstacles in (i=3,j=3) and (i=3,j=4) and (i=3,j=5), (i=6,j=1) and (i=6,j=2)
+                for (var j = 0; j < 13; j++) {
+                    if ((i === 3 && j === 3) || (i === 3 && j === 4) || (i === 3 && j === 5) || (i === 6 && j === 1) || (i === 6 && j === 2)) {
+                        ballsBoard[i][j] = board[i][j] = 4;
                     } else {
-                        board[i][j] = 0;
+                        var randomNum = Math.random();
+                        if (randomNum <= 1.0 * (food_remain + medicine_remain + extratime_remain) / (cnt + medicine_remain + extratime_remain)) {
+                            food_remain--;
+                            ballsBoard[i][j] = board[i][j] = 1;
+                            
+                        } else if (randomNum < 1.0 * (pacman_remain + food_remain + medicine_remain + extratime_remain) / (cnt + medicine_remain + extratime_remain)) {
+                            shape.i = i;
+                            shape.j = j;
+                            pacman_remain--;
+                            ballsBoard[i][j] = board[i][j] = 2;
+                        } 
+                        else if (medicine_remain > 0 && randomNum < 0.35){
+                            ballsBoard[i][j] = board[i][j] = 8; //medicine
+                            medicine_remain--;
+                        }
+                        else if (extratime_remain > 0 && randomNum < 0.35){
+                            ballsBoard[i][j] = board[i][j] = 9; //time
+                            extratime_remain--;
+                        }
+                        else {
+                            ballsBoard[i][j] = board[i][j] = 0;
+                        }
+                        cnt--;
                     }
-                    cnt--;
+                    //5,6,7 are the monstars.
+                    if (i === 0 && j ===0 && numOfMonstaresToCreate > 0){
+                        ballsBoard[i][j] = board[i][j] = 5;
+                        monstarsArr[0].i = i;
+                        monstarsArr[0].j = j;
+                        numOfMonstaresToCreate--;
+                    }
+                    if (i === 9 && j === 9 && numOfMonstaresToCreate > 0){
+                        ballsBoard[i][j] = board[i][j] = 6;
+                        monstarsArr[2].i = i;
+                        monstarsArr[2].j = j;
+                        numOfMonstaresToCreate--;
+                    }
+                    if (i === 0 && j=== 9 && numOfMonstaresToCreate > 0){
+                        ballsBoard[i][j] = board[i][j] = 7;
+                        monstarsArr[1].i = i;
+                        monstarsArr[1].j = j;
+                        numOfMonstaresToCreate--;
+                    }
                 }
-                //5,6,7 are the monstars.
-                if (i === 0 && j ===0 && numOfMonstaresToCreate > 0){
-                    board[i][j] = 5;
-                    monstarsArr[0].i = i;
-                    monstarsArr[0].j = j;
-                    numOfMonstaresToCreate--;
-                }
-                if (i === 9 && j === 9 && numOfMonstaresToCreate > 0){
-                    board[i][j] = 6;
-                    monstarsArr[2].i = i;
-                    monstarsArr[2].j = j;
-                    numOfMonstaresToCreate--;
-                }
-                if (i === 0 && j=== 9 && numOfMonstaresToCreate > 0){
-                    board[i][j] = 7;
-                    monstarsArr[1].i = i;
-                    monstarsArr[1].j = j;
-                    numOfMonstaresToCreate--;
-                }
-                ballsBoard[i][j] = "check";
+            }
+            while (food_remain > 0) {
+                var emptyCell = findRandomEmptyCell(board);
+                board[emptyCell[0]][emptyCell[1]] = 1;
+                food_remain--;
             }
         }
-        while (food_remain > 0) {
-            var emptyCell = findRandomEmptyCell(board);
-            board[emptyCell[0]][emptyCell[1]] = 1;
-            food_remain--;
+        else{
+            board = ballsBoard;
         }
+
         keysDown = {};
         addEventListener("keydown", function (e) {
             keysDown[e.code] = true;
@@ -114,7 +137,9 @@
         addEventListener("keyup", function (e) {
             keysDown[e.code] = false;
         }, false);
-        interval = setInterval(UpdatePosition, 250);
+        if (shape != null && board != null){
+            interval = setInterval(UpdatePosition, 250);
+        }
     }
 
 
@@ -164,11 +189,17 @@
                 if (board[i][j] === 5){
                     context.drawImage(monstarsArr[0], center.x - 12, center.y - 12, 25, 25);
                 }
-                if (board[i][j] === 6){
+                else if (board[i][j] === 6){
                     context.drawImage(monstarsArr[1], center.x - 12, center.y - 12, 25, 25);
                 }
-                if (board[i][j] === 7){
+                else if (board[i][j] === 7){
                     context.drawImage(monstarsArr[2], center.x - 12, center.y - 12, 25, 25);
+                }
+                else if (board[i][j] === 8){
+                    context.drawImage(medicine, center.x - 12, center.y - 12, 25, 25);
+                }
+                else if (board[i][j] === 9){
+                    context.drawImage(extime, center.x - 12, center.y - 12, 25, 25);
                 }
                 if (board[i][j] === 2 && direction === "right") {
                     context.beginPath();
@@ -225,22 +256,23 @@
                     context.fillStyle = "black"; //color
                     context.fill();
                 } 
-                else if (board[i][j] === 1) {
-                    context.beginPath();
-                    context.arc(center.x, center.y, 12, 0, 2 * Math.PI); // circle
-                    if (firstDraw == 0){
-                        context.fillStyle = drawBall(); //color of balls
-                        ballsBoard[i][j] = drawBall();
-                    }
-                    else{
-                        context.fillStyle = ballsBoard[i][j];
-                    }
-                    context.fill();
-                }
                 else if (board[i][j] === 4) {
                     context.beginPath();
                     context.rect(center.x - 15, center.y - 20, 30, 40);
                     context.fillStyle = "grey"; //color
+                    context.fill();
+                }
+                else if (typeof board[i][j] === "string" || board[i][j] === 1) {
+                    context.beginPath();
+                    context.arc(center.x, center.y, 12, 0, 2 * Math.PI); // circle
+                    if (firstDraw == 0){
+                        board[i][j] = ballsBoard[i][j] = drawBall();
+                        context.fillStyle = ballsBoard[i][j]; //color of balls
+                        
+                    }
+                    else{
+                        context.fillStyle = ballsBoard[i][j];
+                    }
                     context.fill();
                 }
             }
@@ -258,7 +290,7 @@
             }
         }
         if (x === 2) {
-            if (shape.j < 9 && board[shape.i][shape.j + 1] !== 4) {
+            if (shape.j < 12 && board[shape.i][shape.j + 1] !== 4) {
                 shape.j++;
                 direction = "down";
             }
@@ -270,20 +302,26 @@
             }
         }
         if (x === 4) {
-            if (shape.i < 9 && board[shape.i + 1][shape.j] !== 4) {
+            if (shape.i < 13 && board[shape.i + 1][shape.j] !== 4) {
                 shape.i++;
                 direction = "right";
             }
         }
         //updating score
-        if (board[shape.i][shape.j] === 1 && ballsBoard[shape.i][shape.j] === color5) {
+        if ((board[shape.i][shape.j] === 1 || typeof board[shape.i][shape.j] === "string") && ballsBoard[shape.i][shape.j] === color5) {
             score+=5;
         }
-        else if (board[shape.i][shape.j] === 1 && ballsBoard[shape.i][shape.j] === color10) {
+        else if ((board[shape.i][shape.j] === 1 || typeof board[shape.i][shape.j] === "string") && ballsBoard[shape.i][shape.j] === color10) {
             score+=10;
         }
-        else if (board[shape.i][shape.j] === 1 && ballsBoard[shape.i][shape.j] === color25) {
+        else if ((board[shape.i][shape.j] === 1 || typeof board[shape.i][shape.j] === "string") && ballsBoard[shape.i][shape.j] === color25) {
             score+=25;
+        }
+        else if (board[shape.i][shape.j] === 8 && ballsBoard[shape.i][shape.j] === 8) {
+            score+=50;
+        }
+        else if (board[shape.i][shape.j] === 9 && ballsBoard[shape.i][shape.j] === 9) {
+            numOfsecs+=10;
         }
         board[shape.i][shape.j] = 2;
 
@@ -395,6 +433,7 @@
      * this function gets the user's settings and starts the game.
      */
     function getSettings(){
+        window.clearInterval(interval);
         upKey = globalVariable.upKey;
         downKey = globalVariable.downKey;
         leftKey = globalVariable.leftKey;
@@ -411,7 +450,8 @@
         numOfcolor10 = numOfBalls * 0.3;
         numOfcolor25 = numOfBalls * 0.1;
         firstDraw = 0;
-
+        board = null;
+        
         Start();
     }
 

@@ -117,5 +117,7 @@
         {
             displayNone();
             x.style.display = "block";
+            document.getElementById("settings_menu").style.display = "block";
+            document.getElementById("restart_menu").style.display = "block";
         }
     }
