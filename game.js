@@ -203,6 +203,17 @@
                     context.fillStyle = "black"; //color
                     context.fill();
                 }
+                else if (board[i][j] === 2 && direction === "down") {
+                    context.beginPath();
+                    context.arc(center.x, center.y, 15, 0.60 * Math.PI, 0.35 * Math.PI); // half circle
+                    context.lineTo(center.x, center.y);
+                    context.fillStyle = pac_color; //color
+                    context.fill();
+                    context.beginPath();
+                    context.arc(center.x + 9, center.y - 2, 3, 0, 2 * Math.PI); // circle
+                    context.fillStyle = "black"; //color
+                    context.fill();
+                }
                 else if (board[i][j] === 2) {
                     context.beginPath();
                     context.arc(center.x, center.y, 15, 0.1 * Math.PI, 1.85 * Math.PI); // half circle
@@ -224,17 +235,6 @@
                     else{
                         context.fillStyle = ballsBoard[i][j];
                     }
-                    context.fill();
-                }
-                else if (board[i][j] === 2 && direction === "down") {
-                    context.beginPath();
-                    context.arc(center.x, center.y, 15, 0.60 * Math.PI, 0.35 * Math.PI); // half circle
-                    context.lineTo(center.x, center.y);
-                    context.fillStyle = pac_color; //color
-                    context.fill();
-                    context.beginPath();
-                    context.arc(center.x + 9, center.y - 2, 3, 0, 2 * Math.PI); // circle
-                    context.fillStyle = "black"; //color
                     context.fill();
                 }
                 else if (board[i][j] === 4) {
