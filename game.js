@@ -423,7 +423,8 @@
                             display_end_game("You Lost!" + "\n" + "Your score is: " + score);
                         }
                         else{
-                            alert("You are eaten by a ghost! You have " + lives + " more attempts left");
+                            alert("You are eaten by a ghost!" + "\n"  + "You have " + lives + " more attempts left!" 
+                             + "\n" + "Confirm to continue.");
                             drawCurrBoardAsNew();
                         }
                     }
