@@ -187,7 +187,8 @@ input, label {
   height: 100%; 
   overflow: auto; 
   background-color: rgb(0,0,0); 
-  background-color: rgba(0,0,0,0.4);
+  background-color: rgba(0,0,0,0.4); 
+  line-height: 300%;
 }
 
 /* Modal Content/Box */
@@ -197,13 +198,13 @@ input, label {
   margin-top: 8%; 
   padding: 20px;
   border: 1px solid #888;
-  width: 70%; 
+  width: 50%; 
   height: 50%;
 }
 
 /* The Close Button */
 .close {
-  color: black;
+  color: #aaa;
   float: right;
   font-size: 28px;
   font-weight: bold;
@@ -272,19 +273,11 @@ Button:hover, Button:focus {
 
 .gameButton{
   position: relative;
-  left: 36%;
+  left: 32%;
   margin-right: 2%;
 }
 
 
 #endGameMessage{
   font-size: 40px;
-  line-height: 180%;
-}
-
-#aboutimg{
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-  width: 50%;
 }
