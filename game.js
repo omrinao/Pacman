@@ -40,6 +40,9 @@
     var extime = new Image();
     extime.src = "pics/extratime.png";
 
+    var angle = new Image();
+    angle.src = "pics/angle.png";
+
     var monstarsArr = new Array();
     monstarsArr[0] = new Image();
     monstarsArr[0].src = "pics/ghostorange.png";
@@ -81,11 +84,36 @@
                         boardForSecondTry[i][j] = ballsBoard[i][j] = board[i][j] = 4;
                     } else {
                         var randomNum = Math.random();
-                        if (randomNum <= 1.0 * (food_remain + medicine_remain + extratime_remain) / (cnt + medicine_remain + extratime_remain)) {
+                        //5,6,7 are the monstars. 8 medicine, 9 extra time, 10 angle
+                        if (i === 0 && j === 0 && numOfMonstaresToCreate > 0){
+                        ballsBoard[i][j] = board[i][j] = 5;
+                        monstarsArr[0].i = i;
+                        monstarsArr[0].j = j;
+                        numOfMonstaresToCreate--;
+                        }
+                        else if (i === 13 && j === 13 && numOfMonstaresToCreate > 0){
+                            ballsBoard[i][j] = board[i][j] = 6;
+                            monstarsArr[2].i = i;
+                            monstarsArr[2].j = j;
+                            numOfMonstaresToCreate--;
+                        }
+                        else if (i === 0 && j === 13 && numOfMonstaresToCreate > 0){
+                            ballsBoard[i][j] = board[i][j] = 7;
+                            monstarsArr[1].i = i;
+                            monstarsArr[1].j = j;
+                            numOfMonstaresToCreate--;
+                        }
+                        else if (i === 8 && j === 11){//angle
+                            ballsBoard[i][j] = board[i][j] = 10;
+                            angle.i = 11;
+                            angle.j = 8;
+                        }
+
+                        else if (randomNum <= 1.0 * (food_remain + medicine_remain + extratime_remain + 1) / (cnt + 1 + medicine_remain + extratime_remain)) {
                             food_remain--;
                             ballsBoard[i][j] = board[i][j] = 1;
                             
-                        } else if (randomNum < 1.0 * (pacman_remain + food_remain + medicine_remain + extratime_remain) / (cnt + medicine_remain + extratime_remain)) {
+                        } else if (randomNum < 1.0 * (1 + pacman_remain + food_remain + medicine_remain + extratime_remain) / (1 + cnt + medicine_remain + extratime_remain)) {
                             shape.i = i;
                             shape.j = j;
                             pacman_remain--;
@@ -103,25 +131,6 @@
                             ballsBoard[i][j] = board[i][j] = 0;
                         }
                         cnt--;
-                    }
-                    //5,6,7 are the monstars.
-                    if (i === 0 && j === 0 && numOfMonstaresToCreate > 0){
-                        ballsBoard[i][j] = board[i][j] = 5;
-                        monstarsArr[0].i = i;
-                        monstarsArr[0].j = j;
-                        numOfMonstaresToCreate--;
-                    }
-                    if (i === 13 && j === 13 && numOfMonstaresToCreate > 0){
-                        ballsBoard[i][j] = board[i][j] = 6;
-                        monstarsArr[2].i = i;
-                        monstarsArr[2].j = j;
-                        numOfMonstaresToCreate--;
-                    }
-                    if (i === 0 && j === 13 && numOfMonstaresToCreate > 0){
-                        ballsBoard[i][j] = board[i][j] = 7;
-                        monstarsArr[1].i = i;
-                        monstarsArr[1].j = j;
-                        numOfMonstaresToCreate--;
                     }
                 }
             }
@@ -205,6 +214,9 @@
                 }
                 else if (board[i][j] === 9){
                     context.drawImage(extime, center.x - 12, center.y - 12, 25, 25);
+                }
+                else if (board[i][j] === 10){
+                    context.drawImage(angle, center.x-18, center.y - 16, 30, 30);
                 }
                 if (board[i][j] === 2 && direction === "right") {
                     context.beginPath();
@@ -328,6 +340,9 @@
         else if (board[shape.i][shape.j] === 9 && ballsBoard[shape.i][shape.j] === 9) {
             numOfsecs+=10;
         }
+        else if (board[shape.i][shape.j] === 10 && ballsBoard[shape.i][shape.j] === 10) {
+            score+=50;
+        }
         board[shape.i][shape.j] = 2;
 
         //j is for row.
@@ -337,17 +352,18 @@
             var tmpJ = monstarsArr[num].j;
             board[monstarsArr[num].i][monstarsArr[num].j] = boardForSecondTry[tmpI][tmpJ];
             var direc =  getDirectionForMons(shape.j ,shape.i,monstarsArr[num].j,monstarsArr[num].i,num);
+            var direcForAngle = getDirectionForAngle();
             if (direc === 'up' && monstarsArr[num].j > 0 && board[monstarsArr[num].i][monstarsArr[num].j - 1] !== 4 && monsterInPos(monstarsArr[num].i,monstarsArr[num].j-1)){
                 monstarsArr[num].j--;
             }
-            else if (direc === 'down' && monstarsArr[num].j < 9 && board[monstarsArr[num].i][monstarsArr[num].j + 1] !== 4 && monsterInPos(monstarsArr[num].i,monstarsArr[num].j+1)){
+            else if (direc === 'down' && monstarsArr[num].j < 13 && board[monstarsArr[num].i][monstarsArr[num].j + 1] !== 4 && monsterInPos(monstarsArr[num].i,monstarsArr[num].j+1)){
                 monstarsArr[num].j++;
             }
             else if (direc === 'left' && monstarsArr[num].i > 0 && board[monstarsArr[num].i - 1][monstarsArr[num].j] !== 4 && monsterInPos(monstarsArr[num].i - 1,monstarsArr[num].j)){
                 monstarsArr[num].i--;
                 
             }
-            else if (direc === 'right' && monstarsArr[num].i < 9 && board[monstarsArr[num].i + 1][monstarsArr[num].j] !== 4 && monsterInPos(monstarsArr[num].i + 1,monstarsArr[num].j)){
+            else if (direc === 'right' && monstarsArr[num].i < 13 && board[monstarsArr[num].i + 1][monstarsArr[num].j] !== 4 && monsterInPos(monstarsArr[num].i + 1,monstarsArr[num].j)){
                 monstarsArr[num].i++;
             }
 
@@ -367,10 +383,24 @@
                     display_end_game("You Lost!" + "\n" + "Your score is: " + score);
                 }
                 else{
-                    alert("nice try! have another one!");
+                    display_another_try(lives);
                     drawCurrBoardAsNew();
                 }
             }
+
+            if (direcForAngle == "up"){
+                angle.j--;
+            }
+            else if (direcForAngle == "down"){
+                angle.j++;
+            }
+            else if (direcForAngle == "right"){
+                angle.i++;
+            }
+            else if (direcForAngle == "left"){
+                angle.i--;
+            }
+            board[angle.i][angle.j] = 10;
 
         }
         
@@ -513,13 +543,13 @@
         if (direction === 'up' && monstarsArr[num].j > 0 && board[monstarsArr[num].i][monstarsArr[num].j - 1] !== 4){
             return 'up';
         }
-        if (direction === 'down' && monstarsArr[num].j < 9  && board[monstarsArr[num].i][monstarsArr[num].j + 1] !== 4){
+        if (direction === 'down' && monstarsArr[num].j < 13  && board[monstarsArr[num].i][monstarsArr[num].j + 1] !== 4){
             return 'down';
         }
         if (direction === 'left' && monstarsArr[num].i > 0 && board[monstarsArr[num].i - 1][monstarsArr[num].j] !== 4){
             return 'left';
         }
-        if (direction === 'right' && monstarsArr[num].i < 9 && board[monstarsArr[num].i + 1][monstarsArr[num].j] !== 4){
+        if (direction === 'right' && monstarsArr[num].i < 13 && board[monstarsArr[num].i + 1][monstarsArr[num].j] !== 4){
             return 'right';
         }
         return getRandomMove(num);
@@ -633,13 +663,13 @@
                     monstarsArr[0].i = i;
                     monstarsArr[0].j = j;
                     boardForSecondTry[i][j] = 5;
-                }else if (i === 9 && j === 9 && numOfMonstaresToCreate > 0){
+                }else if (i === 13 && j === 13 && numOfMonstaresToCreate > 0){
                     ballsBoard[i][j] = board[i][j] = 6;
                     monstarsArr[2].i = i;
                     monstarsArr[2].j = j;
                     numOfMonstaresToCreate--;
                     boardForSecondTry[i][j] = 6;
-                }else if (i === 0 && j=== 9 && numOfMonstaresToCreate > 0){
+                }else if (i === 0 && j=== 13 && numOfMonstaresToCreate > 0){
                     ballsBoard[i][j] = board[i][j] = 7;
                     monstarsArr[1].i = i;
                     monstarsArr[1].j = j;
@@ -750,6 +780,62 @@
             for (var j = 0; j < 13;j++){
                 if (wallPos[i][j] === null){
                     wallPos[i][j] === 0;
+                }
+            }
+        }
+    }
+
+    function getDirectionForAngle(){
+        var rand = Math.random();
+        if (board[angle.i][angle.j - 1] != null && (board[angle.i][angle.j - 1] === 1 || board[angle.i][angle.j - 1] === 0) ){
+            return "up";
+        }
+        else if (board[angle.i - 1][angle.j] != null && (board[angle.i - 1][angle.j] === 1 || board[angle.i - 1][angle.j] === 0) ){
+            return "left";
+        }
+        else if (board[angle.i][angle.j + 1] != null && (board[angle.i][angle.j + 1] === 1 || board[angle.i][angle.j + 1] === 0) ){
+            return "down";
+        }
+        else if (board[angle.i + 1][angle.j] != null && (board[angle.i + 1][angle.j] === 1 || board[angle.i + 1][angle.j] === 0) ){
+            return "right";
+        }
+        return "up";
+    }
+
+    function display_another_try(lives){
+        // Get the modal
+        var gm = document.getElementById("game");
+        if (gm.style.display != "none"){
+            var modal = document.getElementById("myLife");
+            // Get the <span> element that closes the modal
+            var spanGame = document.getElementsByClassName("closeLife")[0];
+            var lifeGame = document.getElementById("play_again_life");
+            mySound.src = "";
+            modal.style.display = "block";
+            document.getElementById("lifeDown").style.display = "block";
+            document.getElementById("lifeGameMessage").innerText = "You are eaten by a ghost! You have " + lives + " more attempts left";
+            // When the user clicks on <span> (x), close the modal
+            spanGame.onclick = function() {
+                modal.style.display = "none";
+                display_welcome();
+            }
+
+            lifeGame.onclick = function() {
+                modal.style.display = "none";
+            }
+
+            // Handle ESC key (key code 27)
+            document.addEventListener('keyup', function(e) {
+                if (e.keyCode == 27) {
+                    modal.style.display = "none";
+                }
+            });
+
+            // When the user clicks anywhere outside of the modal, close it
+            window.onclick = function(event) {
+                if (event.target == modal) {
+                    modal.style.display = "none";
+                    display_welcome();
                 }
             }
         }

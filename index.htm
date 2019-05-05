@@ -40,16 +40,16 @@
 <div id="myModal" class="modal">
 
   <!-- Modal content -->
-  <div class="modal-content">
+  <div id="aboutModalbody" class="modal-content">
     <span class="close">&times;</span>
-    <p>Some text in the Modal..</p>
+    <p style="font-size: 20px;" id="aboutContent" align=center>Some text</p>
+    <img id="aboutimg" src="pics/about_image.png" alt="aboutimg" style="width:400px;height:100px;">
   </div>
 
 </div>
 
 <!-- The Game End Modal -->
 <div id="myGame" class="modal">
-
     <!-- Modal content -->
     <div id="gameEnd"class="modal-content">
       <span class="closeGame">&times;</span>
@@ -59,6 +59,17 @@
     </div>
   
   </div>
+
+  <!-- The life down Modal -->
+    <div id="myLife" class="modal">
+    <!-- Modal content -->
+    <div id="lifeDown"class="modal-content">
+      <span class="closeLife">&times;</span>
+      <p align=center id="lifeGameMessage">Some text </p>
+      <button id= "play_again_life" class="gameButton" type="button"> Continue </button>
+    </div>
+  
+    </div>
 
 <!--register page-->
 <div id = "register_page" class="form_reg" style="display : none">
