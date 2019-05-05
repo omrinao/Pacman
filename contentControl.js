@@ -14,6 +14,9 @@
         let Play = document.getElementById("game");
         Play.style.display = "none";
         document.getElementById("gameEnd").style.display = "none";
+
+        let About = document.getElementById("myModal");
+        About.style.display = "none";
     }
 
     function cleanInputs(){
@@ -87,6 +90,10 @@
         // Get the <span> element that closes the modal
         var span = document.getElementsByClassName("close")[0];
         modal.style.display = "block";
+        var aboutMessage = "This site was built by: Avi Giz & Omri Naor" + "</hr>" + "<br>" + "<br>" +
+         "We used the basic jQuery library to check the integrity of the input cells for registration and connection to the site by using basic functions and valid input formats, such as a password containing 8 characters and one letter, a valid email format, first name and last name that do not contain digits."
+         + "<br>" + "<br>" + "The difficulty we encountered during the course of the work was dealing with dynamic code, which changes every input from the user and requires synchronization with several objects participating in the game.";
+        var para = document.getElementById("aboutContent").innerHTML = aboutMessage;
         
 
         // When the user clicks on <span> (x), close the modal
