@@ -30,7 +30,7 @@
 	var wallPos;
     var firstDraw;
     var mySound;
-
+	var isPacCreated;
     var background = new Image();
     background.src = "pics/background.png";
 
@@ -116,6 +116,7 @@
                         } else if (randomNum < 1.0 * (1 + pacman_remain + food_remain + medicine_remain + extratime_remain) / (1 + cnt + medicine_remain + extratime_remain)) {
                             shape.i = i;
                             shape.j = j;
+							isPacCreated = true;
                             pacman_remain--;
                             ballsBoard[i][j] = board[i][j] = 2;
                         } 
@@ -144,6 +145,15 @@
             board = ballsBoard;
         }
 
+		if (!isPacCreated){
+            pacman_remain--;
+            var newPos = getNewRrandomPosForPac();
+            ballsBoard[newPos[0]][newPos[1]] = board[newPos[0]][newPos[1]] = 2;
+            shape.i = newPos[0];
+            shape.j = newPos[1];
+            isPacCreated = true;
+        }
+		
         keysDown = {};
         addEventListener("keydown", function (e) {
             keysDown[e.code] = true;
@@ -152,7 +162,7 @@
             keysDown[e.code] = false;
         }, false);
         if (shape != null && board != null){
-            interval = setInterval(UpdatePosition, 250);
+            interval = setInterval(UpdatePosition, 500);
         }
     }
 
@@ -298,7 +308,7 @@
     }
 
     function UpdatePosition() {
-        board[shape.i][shape.j] = 0;
+        boardForSecondTry[shape.i][shape.j] = board[shape.i][shape.j] = 0;
         var x = GetKeyPressed();
         if (x === 1) {
             if (shape.j > 0 && board[shape.i][shape.j - 1] !== 4) {
@@ -561,15 +571,27 @@
      * @param {} num 
      */
     function getRandomMove(num){
-        var randomNum = Math.random();
-        if (randomNum <= 0.25 && monstarsArr[num].j > 0 && board[monstarsArr[num].i][monstarsArr[num].j - 1] !== 4)
-            return 'up';
-        if (randomNum <= 0.5 && monstarsArr[num].i > 0 && board[monstarsArr[num].i - 1][monstarsArr[num].j] !== 4)
-            return 'left';
-        if (randomNum <= 0.75 && monstarsArr[num].j < 13  && board[monstarsArr[num].i][monstarsArr[num].j + 1] !== 4)
-            return 'down';
-        if (monstarsArr[num].i < 13 && board[monstarsArr[num].i + 1][monstarsArr[num].j] !== 4)
-            return 'right';
+        var randomNum;
+        var finished = false;
+        while(!finished){
+            randomNum = Math.random();
+            if (randomNum <= 0.25 && monstarsArr[num].j > 0 && board[monstarsArr[num].i][monstarsArr[num].j - 1] !== 4){
+                finished = true;
+                return 'up';
+            }
+            if (randomNum <= 0.5 && monstarsArr[num].i > 0 && board[monstarsArr[num].i - 1][monstarsArr[num].j] !== 4){
+                finished = true;
+                return 'left';
+            }
+            if (randomNum <= 0.75 && monstarsArr[num].j < 13  && board[monstarsArr[num].i][monstarsArr[num].j + 1] !== 4){
+                finished = true;
+                return 'down';
+            }
+            if (monstarsArr[num].i < 13 && board[monstarsArr[num].i + 1][monstarsArr[num].j] !== 4){
+                finished = true;
+                return 'right';
+            }
+        }
     }
 
 
@@ -657,32 +679,31 @@
         var numOfMonstaresToCreate = numOfMons;
         for (var i = 0; i < 14; i++) {
             for (var j = 0; j < 13; j++) {
-                if (i === 0 && j === 0 && numOfMonstaresToCreate > 0){
-                    board[i][j] = ballsBoard[i][j] = 5;
-                    numOfMonstaresToCreate--;
-                    monstarsArr[0].i = i;
-                    monstarsArr[0].j = j;
-                    boardForSecondTry[i][j] = 5;
-                }else if (i === 13 && j === 13 && numOfMonstaresToCreate > 0){
-                    ballsBoard[i][j] = board[i][j] = 6;
-                    monstarsArr[2].i = i;
-                    monstarsArr[2].j = j;
-                    numOfMonstaresToCreate--;
-                    boardForSecondTry[i][j] = 6;
-                }else if (i === 0 && j=== 13 && numOfMonstaresToCreate > 0){
-                    ballsBoard[i][j] = board[i][j] = 7;
-                    monstarsArr[1].i = i;
-                    monstarsArr[1].j = j;
-                    numOfMonstaresToCreate--;
-                    boardForSecondTry[i][j] = 7;
-                }else if (boardForSecondTry[i][j] === 2 || boardForSecondTry[i][j] === 5 || boardForSecondTry[i][j] === 6 || boardForSecondTry[i][j] ===7){
-                    board[i][j] = boardForSecondTry[i][j] = 0;
-                } else {
-                    board[i][j] = boardForSecondTry[i][j];
-                }
-            }
+                board[i][j] = boardForSecondTry[i][j];
+             }
         }
-        getNewRrandomPosForPac();
+        var num = 0;
+        if (numOfMonstaresToCreate > 0){
+            monstarsArr[num].i = 0;
+            monstarsArr[num].j = 0;
+            numOfMonstaresToCreate--;
+            num++;
+        }
+        if (numOfMonstaresToCreate > 0){
+            monstarsArr[num].i = 0;
+            monstarsArr[num].j = 13;
+            numOfMonstaresToCreate--;
+            num++;
+        }
+        if (numOfMonstaresToCreate > 0){
+            monstarsArr[num].i = 13;
+            monstarsArr[num].j = 13;
+            numOfMonstaresToCreate--;
+            num++;
+        }
+
+        var newPos = getNewRrandomPosForPac();
+        board[newPos[0]][newPos[1]] = 2;
         Draw();
     }
 
@@ -700,10 +721,10 @@
                 board[randomI][randomJ] !== 1){
                     shape.i = randomI;
                     shape.j = randomJ;
-                    board[randomI][randomJ] = 2;
             }
             foundNewPos = true;
         }
+        return [randomI, randomJ];
     }
 
     function initWalls(){
