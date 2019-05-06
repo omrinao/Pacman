@@ -110,7 +110,6 @@
                             ballsBoard[i][j] = board[i][j] = 10;
                             angle.i = i;
                             angle.j = j;
-                            boardForSecondTry[i][j] = 0;
                         }
                         else if (randomNum <= 1.0 * (food_remain + medicine_remain + extratime_remain + 1) / (cnt + 1 + medicine_remain + extratime_remain)) {
                             food_remain--;
@@ -145,18 +144,40 @@
             }
         }
         else{
+            clearInterval(interval);
+            monstarsArr[0].i = 0;
+            monstarsArr[0].j = 0;
+            angle.i = 8;
+            angle.j = 11;
+            numOfMonstaresToCreate--;
             for(var i =0; i<14;i++){
                 boardForSecondTry[i] = new Array();
                 for (var j=0;j<13;j++){
-                    board[i][j] = ballsBoard[i][j];
-                    boardForSecondTry[i][j] = ballsBoard[i][j];
+                    if (ballsBoard[i][j] === 2){
+                        board[i][j] = ballsBoard[i][j];
+                        shape.i = i;
+                        shape.j = j;
+                        isPacCreated = true;
+                    }
+                    if (!((i === 0 && j === 0) || (i ===8 && j===11) || (numOfMonstaresToCreate > 0 && i ===0 && j ===12)
+                       || (numOfMonstaresToCreate > 0 && i === 13 && j=== 12) )){
+                            boardForSecondTry[i][j] = board[i][j] = ballsBoard[i][j];
+                       }
+                    else if (numOfMonstaresToCreate > 0 && i ===0 && j ===12){
+                        board[i][j] = ballsBoard[i][j];
+                        monstarsArr[1].i = i;
+                        monstarsArr[1].j = j;
+                        numOfMonstaresToCreate--;
+                    }else if (numOfMonstaresToCreate > 0 && i === 13 && j=== 12){
+                        board[i][j] = ballsBoard[i][j];
+                        monstarsArr[2].i = i;
+                        monstarsArr[2].j = j;
+                        numOfMonstaresToCreate--;
+                    } else {
+                        board[i][j] = ballsBoard[i][j];
+                    }
                 }
             }
-            monstarsArr[0].i = 0;
-            monstarsArr[0].j = 0;
-            boardForSecondTry[0][0] = 0;
-            boardForSecondTry[0][12] = 0;
-            boardForSecondTry[13][12] = 0;
         }
 
 		if (!isPacCreated){
@@ -176,7 +197,7 @@
             keysDown[e.code] = false;
         }, false);
         if (shape != null && board != null){
-            interval = setInterval(UpdatePosition, 500);
+            interval = setInterval(UpdatePosition, 600);
         }
     }
 
@@ -373,13 +394,7 @@
             }
 
 
-            if (angle !== null && shape.i === angle.i && shape.j === angle.j) {
-                if (lives <= 3){
-                    lives+=1;
-                }
-                angle.src = "";
-            }
-            board[shape.i][shape.j] = 2;
+            
             
 
             
@@ -447,7 +462,13 @@
                     }
                 board[angle.i][angle.j] = 10;
             }
-            
+            if (angle !== null && shape.i === angle.i && shape.j === angle.j) {
+                if (lives <= 3){
+                    lives+=1;
+                }
+                angle.src = "";
+            }
+            board[shape.i][shape.j] = 2;
             
 
             var currentTime = new Date();
@@ -854,10 +875,10 @@
                 else if (angle.i > 0 && rand < 0.5 && board[angle.i - 1][angle.j] != null && (board[angle.i - 1][angle.j] !== 4)){
                     return "left";
                 }
-                else if (rand < 0.75 && board[angle.i + 1][angle.j] != null && (board[angle.i + 1][angle.j] !== 4) ){
+                else if (angle.i <13 && rand < 0.75 && board[angle.i + 1][angle.j] != null && (board[angle.i + 1][angle.j] !== 4) ){
                     return "right";
                 }
-                else if (board[angle.i][angle.j + 1] != null && (board[angle.i][angle.j + 1] !== 4)){
+                else if (angle.j < 13 && board[angle.i][angle.j + 1] != null && (board[angle.i][angle.j + 1] !== 4)){
                     return "down";
                 }
             }
