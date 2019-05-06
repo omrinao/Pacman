@@ -732,7 +732,10 @@
         var numOfMonstaresToCreate = numOfMons;
         for (var i = 0; i < 14; i++) {
             for (var j = 0; j < 13; j++) {
-                board[i][j] = boardForSecondTry[i][j];
+                if (board[i][j] === 2)
+                    board[i][j] = boardForSecondTry[i][j] = 0;
+                else
+                    board[i][j] = boardForSecondTry[i][j];
              }
         }
         var num = 0;
@@ -757,8 +760,8 @@
 
         var newPos = getNewRrandomPosForPac();
         board[newPos[0]][newPos[1]] = 2;
-        board[shape.i][shape.j] = boardForSecondTry[shape.i][shape.j];
-        //Draw();
+        shape.i = newPos[0];
+        shape.j = newPos[1];
     }
 
     function getNewRrandomPosForPac(){
@@ -773,10 +776,8 @@
             if (board[randomI][randomJ] !== 4  && board[randomI][randomJ] !== 5 &&
                 board[randomI][randomJ] !== 6 && board[randomI][randomJ] !== 7 &&
                 board[randomI][randomJ] !== 1){
-                    shape.i = randomI;
-                    shape.j = randomJ;
+                    foundNewPos = true;
             }
-            foundNewPos = true;
         }
         return [randomI, randomJ];
     }
