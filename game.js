@@ -242,10 +242,7 @@
         context.fillText("Lives: " + lives,30,130);
         context.strokeStyle = "#FF0000";
         context.strokeRect(20, 20, 180, 130);
-        context.strokeRect(300, 2, 1, 515);
-        context.strokeRect(995, 2, 1, 515);
-        context.strokeRect(301, 1, 694, 1);
-        context.strokeRect(301, 517, 694, 1);
+        context.strokeRect(300, 2, 694, 515);
         for (var i = 0; i < 14; i++) {
             for (var j = 0; j < 13; j++) {
                 var center = new Object();
