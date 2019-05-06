@@ -17,6 +17,8 @@
 
         let About = document.getElementById("myModal");
         About.style.display = "none";
+
+        document.getElementById("footerid").style.display = "block";
     }
 
     function cleanInputs(){
@@ -126,5 +128,6 @@
             x.style.display = "block";
             document.getElementById("settings_menu").style.display = "block";
             document.getElementById("restart_menu").style.display = "block";
+            document.getElementById("footerid").style.display = "none";
         }
     }

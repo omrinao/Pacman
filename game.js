@@ -197,7 +197,7 @@
             keysDown[e.code] = false;
         }, false);
         if (shape != null && board != null){
-            interval = setInterval(UpdatePosition, 600);
+            interval = setInterval(UpdatePosition, 300);
         }
     }
 
