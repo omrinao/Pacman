@@ -19,6 +19,7 @@
         About.style.display = "none";
 
         document.getElementById("footerid").style.display = "block";
+        window.clearInterval(interval);
     }
 
     function cleanInputs(){
